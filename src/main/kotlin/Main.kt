@@ -1,13 +1,6 @@
-import tornadofx.*
-
-class MainView : View("balarii") {
-    override val root = vbox {
-        label(title)
-    }
-}
-
-class Application : App(MainView::class)
+import gui.GUI
 
 fun main(args: Array<String>) {
-    launch<Application>(args)
+    val gui = GUI()
+    gui.run(args)
 }
