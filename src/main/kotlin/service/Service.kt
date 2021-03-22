@@ -9,6 +9,7 @@ import repository.UserRepository
 import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
+import kotlin.streams.toList
 
 class Service {
     private val userRepository: UserRepository
@@ -54,4 +55,10 @@ class Service {
     fun getConferencesOfUser(uid: Int) = userConferenceRepository.getConferencesOfUser(uid)
     fun getUsersOfConference(cid: Int) = userConferenceRepository.getUsersOfConference(cid)
     fun addUserToConference(uid: Int, cid: Int, role: Role, paid: Boolean) = userConferenceRepository.addPair(uid, cid, role, paid)
+
+    fun isUserExistent(username: String, password: String): Boolean {
+        return getUsers().stream().filter {
+            (it.name == username) and (it.password == password)
+        }.toList().isNotEmpty()
+    }
 }

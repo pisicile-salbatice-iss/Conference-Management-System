@@ -24,7 +24,7 @@ class UserRepository (private val url: String, private val db_user: String, priv
             val preparedStatement = connection.prepareStatement(sqlCommand)
             val rs = preparedStatement.executeQuery()
             if (rs.next())
-                user = User(rs.getInt("id"), rs.getString("user"), rs.getString("password"))
+                user = User(rs.getInt("id"), rs.getString("name"), rs.getString("password"))
         }
         return user
     }
@@ -36,7 +36,7 @@ class UserRepository (private val url: String, private val db_user: String, priv
             val preparedStatement = connection.prepareStatement(sqlCommand)
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {
-                val user = User(rs.getInt("id"), rs.getString("user"), rs.getString("password"))
+                val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("password"))
                 users.add(user)
             }
         }

@@ -25,7 +25,11 @@ class LoginView : View("CMS") {
     }
 
     private fun handleLogin() {
-        alert(Alert.AlertType.INFORMATION, "Login")
+        if(service.isUserExistent(usernameField.text, passwordField.text)){
+            alert(Alert.AlertType.INFORMATION, "Welcome " + usernameField.text)
+        }else{
+            alert(Alert.AlertType.INFORMATION, "Bad credentials")
+        }
     }
 
     private fun handleCreateAccount() {
