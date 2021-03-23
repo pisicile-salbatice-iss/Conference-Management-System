@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gui.views.user.AdminView"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="127.0" minHeight="2.0" prefHeight="25.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="265.0" minHeight="4.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="265.0" minHeight="0.0" prefHeight="18.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="342.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="342.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="342.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="342.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Conference name" GridPane.halignment="CENTER" />
+      <TextField fx:id="nameField" maxWidth="-Infinity" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+      <Label text="Price" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <TextField fx:id="priceField" maxWidth="-Infinity" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+      <Label text="Date" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+      <DatePicker fx:id="dateField" maxWidth="-Infinity" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+      <Button fx:id="addConferenceButton" mnemonicParsing="false" text="Add conference" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+   </children>
+</GridPane>

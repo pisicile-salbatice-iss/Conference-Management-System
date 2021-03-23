@@ -15,14 +15,15 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="128.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="319.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="354.0" minHeight="10.0" prefHeight="240.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="319.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="354.0" minHeight="10.0" prefHeight="318.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="354.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Label text="Welcome" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
       <Button fx:id="logoutButton" mnemonicParsing="false" text="Logout" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
       <MenuBar fx:id="menuBar" GridPane.columnSpan="2" GridPane.valignment="TOP" />
-      <ListView fx:id="conferenceListView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+      <ListView fx:id="conferenceListView" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+      <Label text="Choose conference" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
    </children>
 </GridPane>

@@ -7,6 +7,7 @@ import javafx.scene.control.Label
 import javafx.scene.control.MenuBar
 import javafx.scene.layout.GridPane
 import service.Service
+import javafx.geometry.Pos;
 import tornadofx.*
 
 class UserView(user: User, service: Service): View(user.name) {
@@ -14,14 +15,15 @@ class UserView(user: User, service: Service): View(user.name) {
     private val logoutButton: Button by fxid()
     private val menuBar: MenuBar by fxid()
 
+    private val adminView = AdminView(service)
+
     init {
         logoutButton.apply { action { handleLogout() }}
         if(user.name == "admin"){
-            root.add(Label("hi admin"), 2, 2)
+            root.children.removeAt(4);
+            root.add(adminView.root, 1, 2)
         }
     }
-
-
 
     private fun handleLogout(){
         replaceWith(LoginView::class, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
