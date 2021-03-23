@@ -1,5 +1,6 @@
 package gui.views.login
 
+import gui.views.CreateAccountView
 import gui.views.UserView
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
