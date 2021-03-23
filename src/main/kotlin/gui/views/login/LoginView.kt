@@ -1,7 +1,6 @@
 package gui.views.login
 
-import gui.views.CreateAccountView
-import gui.views.UserView
+import gui.views.user.UserView
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.PasswordField
@@ -35,7 +34,6 @@ class LoginView : View("CMS") {
     }
 
     private fun handleCreateAccount() {
-        CreateAccountView().openWindow()
-//        alert(Alert.AlertType.INFORMATION, "Create account")
+        replaceWith(CreateAccountView(service), ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
     }
 }
