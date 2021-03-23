@@ -56,9 +56,9 @@ class Service {
     fun getUsersOfConference(cid: Int) = userConferenceRepository.getUsersOfConference(cid)
     fun addUserToConference(uid: Int, cid: Int, role: Role, paid: Boolean) = userConferenceRepository.addPair(uid, cid, role, paid)
 
-    fun isUserExistent(username: String, password: String): Boolean {
+    fun usersWithNameAndPassword(username: String, password: String): List<User> {
         return getUsers().stream().filter {
             (it.name == username) and (it.password == password)
-        }.toList().isNotEmpty()
+        }.toList()
     }
 }
