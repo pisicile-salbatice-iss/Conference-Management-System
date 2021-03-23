@@ -45,9 +45,13 @@ class UserRepository (private val url: String, private val db_user: String, priv
     }
 
     fun addUser(user: User) {
-        val sqlCommand = "INSERT INTO Users (id, name, password, email) VALUES (${user.id}, ${user.name}, ${user.password}, ${user.email})"
+        val sqlCommand = "INSERT INTO Users (id, name, password, email) VALUES (?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, user.id)
+            preparedStatement.setString(2, user.name)
+            preparedStatement.setString(3, user.password)
+            preparedStatement.setString(4, user.email)
             preparedStatement.executeUpdate()
         }
     }
