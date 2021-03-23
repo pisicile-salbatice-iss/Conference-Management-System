@@ -1,6 +1,6 @@
 package gui
 
-import gui.views.LoginView
+import gui.views.login.LoginView
 import tornadofx.*
 
 

@@ -1,8 +1,24 @@
 package gui.views
 
+import domain.User
+import gui.views.login.LoginView
+import javafx.scene.control.Alert
+import javafx.scene.control.Button
+import javafx.scene.control.MenuBar
 import javafx.scene.layout.GridPane
-import tornadofx.View
+import service.Service
+import tornadofx.*
 
-class UserView: View("User") {
+class UserView(user: User, service: Service): View(user.name) {
     override val root : GridPane by fxml()
+    private val logoutButton: Button by fxid()
+    private val menuBar: MenuBar by fxid()
+
+    init {
+        logoutButton.apply { action { handleLogout() }}
+    }
+
+    private fun handleLogout(){
+        replaceWith(LoginView::class, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
+    }
 }

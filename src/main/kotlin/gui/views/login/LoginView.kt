@@ -1,23 +1,23 @@
-package gui.views
+package gui.views.login
 
+import gui.views.UserView
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
 import javafx.scene.layout.GridPane
 import service.Service
-import tornadofx.View
-import tornadofx.action
-import tornadofx.alert
+import tornadofx.*
 
 
 class LoginView : View("CMS") {
+    private val service = Service()
+
     override val root : GridPane by fxml()
-    val usernameField : TextField by fxid()
-    val passwordField : TextField by fxid()
+    private val usernameField : TextField by fxid()
+    private val passwordField : PasswordField by fxid()
     private val loginButton: Button by fxid()
     private val createAccountButton: Button by fxid()
-
-    private val service = Service()
 
     init {
         loginButton.apply { action { handleLogin() }}
@@ -25,8 +25,9 @@ class LoginView : View("CMS") {
     }
 
     private fun handleLogin() {
-        if(service.isUserExistent(usernameField.text, passwordField.text)){
-            alert(Alert.AlertType.INFORMATION, "Welcome " + usernameField.text)
+        val user = service.usersWithNameAndPassword(usernameField.text, passwordField.text)
+        if(user.isNotEmpty()){
+            replaceWith(UserView(user[0], service), ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
         }else{
             alert(Alert.AlertType.INFORMATION, "Bad credentials")
         }
