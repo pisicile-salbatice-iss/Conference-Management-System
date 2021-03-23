@@ -33,6 +33,7 @@ class LoginView : View("CMS") {
     }
 
     private fun handleCreateAccount() {
-        alert(Alert.AlertType.INFORMATION, "Create account")
+        CreateAccountView().openWindow()
+//        alert(Alert.AlertType.INFORMATION, "Create account")
     }
 }

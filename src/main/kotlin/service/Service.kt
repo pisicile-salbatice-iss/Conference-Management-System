@@ -3,11 +3,13 @@ package service
 import domain.Conference
 import domain.Role
 import domain.User
+import exceptions.ConferenceException
 import repository.ConferenceRepository
 import repository.UserConferenceRepository
 import repository.UserRepository
 import java.io.FileInputStream
 import java.io.IOException
+import java.lang.Integer.max
 import java.util.*
 import kotlin.streams.toList
 
@@ -46,7 +48,15 @@ class Service {
 
     fun findUserById(id: Int) = userRepository.findUserById(id)
     fun getUsers() = userRepository.getUsers()
-    fun addUser(id: Int, name: String, password: String) = userRepository.addUser(User(id, name, password))
+    fun addUser(name: String, password: String, email: String){
+        if(isUsernameExistent(name))
+            throw ConferenceException("Username already exists")
+
+        var id= 0
+        for (user in userRepository.getUsers()) id = max(id, user.id + 1)
+
+        userRepository.addUser(User(id, name, password, email))
+    }
     fun findConferenceById(id: Int) = conferenceRepository.findConferenceById(id)
     fun getConferences() = conferenceRepository.getConferences()
     fun addConference(id: Int, name: String, date: Date, attendancePrice: Int) = conferenceRepository.addConference(
@@ -59,6 +69,12 @@ class Service {
     fun isUserExistent(username: String, password: String): Boolean {
         return getUsers().stream().filter {
             (it.name == username) and (it.password == password)
+        }.toList().isNotEmpty()
+    }
+
+    fun isUsernameExistent(username: String): Boolean{
+        return getUsers().stream().filter {
+            (it.name == username)
         }.toList().isNotEmpty()
     }
 }
