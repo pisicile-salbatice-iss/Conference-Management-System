@@ -1,6 +1,7 @@
 package repository
 
 import domain.Conference
+import java.sql.Date
 import java.sql.DriverManager
 
 class ConferenceRepository (private val url: String, private val db_user: String, private val db_password: String){
@@ -46,9 +47,13 @@ class ConferenceRepository (private val url: String, private val db_user: String
     }
 
     fun addConference(entity: Conference) {
-        val sqlCommand = "INSERT INTO Conferences (id, name, date, attendancePrice) VALUES (${entity.id}, ${entity.name}, ${entity.date}, ${entity.attendancePrice})"
+        val sqlCommand = "INSERT INTO Conferences (id, name, date, attendancePrice) VALUES (?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, entity.id)
+            preparedStatement.setString(2, entity.name)
+            preparedStatement.setDate(3, entity.date)
+            preparedStatement.setInt(4, entity.attendancePrice)
             preparedStatement.executeUpdate()
         }
     }

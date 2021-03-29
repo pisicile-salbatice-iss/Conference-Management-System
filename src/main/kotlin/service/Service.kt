@@ -10,6 +10,7 @@ import repository.UserRepository
 import java.io.FileInputStream
 import java.io.IOException
 import java.lang.Integer.max
+import java.sql.Date
 import java.util.*
 import kotlin.streams.toList
 
@@ -28,7 +29,7 @@ class Service {
     private fun readSettingsFile(): HashMap<String, String> {
         val propertiesMap = HashMap<String, String>()
         val properties = Properties()
-        val configFile = "data/settings.properties"
+        val configFile = "C:\\Users\\User\\Desktop\\UBB\\An2\\Semestrul4\\ISS\\Conference-Management-System\\src\\main\\kotlin\\service\\settings.properties"
         val fileInputStream: FileInputStream = try {
             FileInputStream(configFile)
         } catch (exception: IOException) {
@@ -59,9 +60,12 @@ class Service {
     }
     fun findConferenceById(id: Int) = conferenceRepository.findConferenceById(id)
     fun getConferences() = conferenceRepository.getConferences()
-    fun addConference(id: Int, name: String, date: Date, attendancePrice: Int) = conferenceRepository.addConference(
-        Conference(id, name, date, attendancePrice)
-    )
+    fun addConference(name: String, date: Date, attendancePrice: Int) {
+        var id= 0
+        for (conference in conferenceRepository.getConferences()) id = max(id, conference.id + 1)
+        conferenceRepository.addConference(Conference(id, name, date, attendancePrice))
+    }
+
     fun getConferencesOfUser(uid: Int) = userConferenceRepository.getConferencesOfUser(uid)
     fun getUsersOfConference(cid: Int) = userConferenceRepository.getUsersOfConference(cid)
     fun addUserToConference(uid: Int, cid: Int, role: Role, paid: Boolean) = userConferenceRepository.addPair(uid, cid, role, paid)
