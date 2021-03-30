@@ -1,5 +1,6 @@
 package gui.views.login
 
+import gui.views.user.AdminView
 import gui.views.user.UserView
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
@@ -27,7 +28,17 @@ class LoginView : View("CMS") {
     private fun handleLogin() {
         val user = service.usersWithNameAndPassword(usernameField.text, passwordField.text)
         if(user.isNotEmpty()){
-            replaceWith(UserView(user[0], service), ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
+            if (usernameField.text == "admin") {
+                replaceWith(
+                    AdminView(service),
+                    ViewTransition.Explode(1.seconds)
+                )
+            } else {
+                replaceWith(
+                    UserView(user[0], service),
+                    ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT)
+                )
+            }
         }else{
             alert(Alert.AlertType.INFORMATION, "Bad credentials")
         }

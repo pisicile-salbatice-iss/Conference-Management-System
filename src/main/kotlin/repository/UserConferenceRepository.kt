@@ -49,9 +49,13 @@ class UserConferenceRepository (private val url: String, private val db_user: St
     }
 
     fun addPair(uid: Int, cid: Int, role: Role, paid: Boolean) {
-        val sqlCommand = "INSERT INTO UserConference (uid, cid, role, paid) VALUES ($uid, $cid, $role, $paid)"
+        val sqlCommand = "INSERT INTO UserConference (uid, cid, role, paid) VALUES (?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, uid)
+            preparedStatement.setInt(2, cid)
+            preparedStatement.setString(3, role.name)
+            preparedStatement.setBoolean(4, paid)
             preparedStatement.executeUpdate()
         }
     }

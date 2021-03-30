@@ -29,7 +29,7 @@ class Service {
     private fun readSettingsFile(): HashMap<String, String> {
         val propertiesMap = HashMap<String, String>()
         val properties = Properties()
-        val configFile = "C:\\Users\\User\\Desktop\\UBB\\An2\\Semestrul4\\ISS\\Conference-Management-System\\src\\main\\kotlin\\service\\settings.properties"
+        val configFile = "data/settings.properties"
         val fileInputStream: FileInputStream = try {
             FileInputStream(configFile)
         } catch (exception: IOException) {
@@ -76,9 +76,20 @@ class Service {
         }.toList()
     }
 
+    fun getEmailOfUser(username: String): String {
+        return getUsers().stream().filter {
+            (it.name == username)
+        }.findFirst().get().email
+    }
     fun isUsernameExistent(username: String): Boolean{
         return getUsers().stream().filter {
             (it.name == username)
         }.toList().isNotEmpty()
+    }
+
+    fun getIdOfUsername(username: String): Int {
+        return getUsers().stream().filter {
+            (it.name == username)
+        }.findFirst().get().id
     }
 }

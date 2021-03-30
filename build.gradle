@@ -13,11 +13,11 @@ repositories {
 
 javafx {
     version = "15.0.1"
-    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
+    modules = ['javafx.controls', 'javafx.graphics', 'javafx.fxml']
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget= 1.8
+    kotlinOptions.jvmTarget = 1.8
 }
 
 dependencies {
@@ -26,6 +26,14 @@ dependencies {
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
+    implementation group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+// https://mvnrepository.com/artifact/javax.activation/activation
+    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
+
+
 }
 
 test {

@@ -14,14 +14,9 @@ class UserView(user: User, private val service: Service): View(user.name) {
     override val root : GridPane by fxml()
     private val logoutButton: Button by fxid()
     private val menuBar: MenuBar by fxid()
-    private val adminView = AdminView(service)
     private val conferenceListView: ListView<Conference> by fxid()
     init {
         logoutButton.apply { action { handleLogout() }}
-        if(user.name == "admin"){
-            root.children.removeAt(4);
-            root.add(adminView.root, 1, 2)
-        }
         loadData()
     }
 
