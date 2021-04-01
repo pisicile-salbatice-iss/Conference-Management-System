@@ -49,14 +49,15 @@ class Service {
 
     fun findUserById(id: Int) = userRepository.findUserById(id)
     fun getUsers() = userRepository.getUsers()
-    fun addUser(name: String, password: String, email: String){
+    fun addUser(name: String, password: String, email: String, fullName: String, affiliation: String,
+                personalWebsite: String, domainOfInterest: String){
         if(isUsernameExistent(name))
             throw ConferenceException("Username already exists")
 
         var id= 0
         for (user in userRepository.getUsers()) id = max(id, user.id + 1)
 
-        userRepository.addUser(User(id, name, password, email))
+        userRepository.addUser(User(id, name, password, email, fullName, affiliation, personalWebsite, domainOfInterest))
     }
     fun findConferenceById(id: Int) = conferenceRepository.findConferenceById(id)
     fun getConferences() = conferenceRepository.getConferences()
