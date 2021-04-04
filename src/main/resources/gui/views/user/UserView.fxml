@@ -3,15 +3,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-          prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+          prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="128.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="319.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="319.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         <RowConstraints maxHeight="354.0" minHeight="10.0" prefHeight="318.0" vgrow="SOMETIMES"/>
         <RowConstraints maxHeight="354.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES"/>
     </rowConstraints>
@@ -30,16 +30,55 @@
                 </Insets>
             </VBox.margin>
         </Button>
-        <HBox alignment="CENTER">
-            <TextArea fx:id="proposalText" prefWidth="120.0" maxHeight="10" promptText="Enter proposal here:">
-                <HBox.margin>
+        <VBox alignment="CENTER">
+            <TextArea fx:id="abstractText" maxHeight="10" promptText="Enter abstract here:">
+                <VBox.margin>
                     <Insets>
-                        <right>10</right>
+                        <bottom>20</bottom>
+                        <right>40</right>
                     </Insets>
-                </HBox.margin>
+                </VBox.margin>
             </TextArea>
+            <TextArea fx:id="paperText" maxHeight="10" promptText="Enter paper here:">
+                <VBox.margin>
+                    <Insets>
+                        <bottom>20</bottom>
+                        <right>40</right>
+                    </Insets>
+                </VBox.margin>
+            </TextArea>
+            <TextField fx:id="paperTitle" promptText="Enter title here:">
+                <VBox.margin>
+                    <Insets>
+                        <bottom>20</bottom>
+                        <right>40</right>
+                    </Insets>
+                </VBox.margin>
+            </TextField>
+            <TextField fx:id="authors" promptText="List of authors:">
+                <VBox.margin>
+                    <Insets>
+                        <bottom>20</bottom>
+                        <right>40</right>
+                    </Insets>
+                </VBox.margin>
+            </TextField>
+            <TextField fx:id="keywords" promptText="Keywords:">
+                <VBox.margin>
+                    <Insets>
+                        <bottom>20</bottom>
+                        <right>40</right>
+                    </Insets>
+                </VBox.margin>
+            </TextField>
             <Button fx:id="submitProposal" mnemonicParsing="false" text="Submit proposal"/>
-        </HBox>
+            <VBox.margin>
+                <Insets>
+                    <bottom>20</bottom>
+                </Insets>
+            </VBox.margin>
+        </VBox>
+        <Button fx:id="viewProposals" mnemonicParsing="false" text="View Proposals"/>
     </VBox>
     <Button GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="logoutButton" mnemonicParsing="false" text="Logout"
             GridPane.halignment="CENTER"/>

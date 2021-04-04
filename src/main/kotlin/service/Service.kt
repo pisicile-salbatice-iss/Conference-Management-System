@@ -119,7 +119,40 @@ class Service {
         }.findFirst().get().id
     }
 
-    fun addProposal(userConferenceId: Int, text: String) =
+    fun addProposal(
+        userConferenceId: Int,
+        abstractText: String,
+        paperText: String,
+        title: String,
+        authors: String,
+        keywords: String,
+        accepted: Boolean = false
+    ) =
         proposalRepository.addProposal(Proposal(proposalRepository.getProposals().map { proposal -> proposal.id }
-            .maxOrNull() ?: 0 + 1, userConferenceId, text))
+            .maxOrNull() ?: 0 + 1, userConferenceId, abstractText, paperText, title, authors, keywords, accepted))
+
+    fun updateProposal(
+        id: Int, userConferenceId: Int,
+        abstractText: String,
+        paperText: String,
+        title: String,
+        authors: String,
+        keywords: String,
+        accepted: Boolean = false
+    ) {
+        proposalRepository.updateProposal(
+            Proposal(
+                id,
+                userConferenceId,
+                abstractText,
+                paperText,
+                title,
+                authors,
+                keywords,
+                accepted
+            )
+        )
+    }
+
+    fun getProposalsOfUser(uid: Int) = proposalRepository.getProposalsOfUser(uid)
 }
