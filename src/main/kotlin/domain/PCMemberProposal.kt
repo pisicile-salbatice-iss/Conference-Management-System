@@ -6,4 +6,4 @@ enum class Availability {
     REFUSE
 }
 
-data class PCMemberProposal (val pcMemberId: Int, val proposalId: Int, val availability: Availability)
+data class PCMemberProposal (val pcMemberId: Int, val proposalId: Int, val availability: Availability, val assigned: Boolean)

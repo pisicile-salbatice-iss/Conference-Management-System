@@ -154,7 +154,7 @@ class Service {
     }
 
     fun addPcMemberProposal(pcMemberId: Int, proposalId: Int, availability: Availability){
-        pcMemberProposalRepository.addPair(PCMemberProposal(pcMemberId, proposalId, availability))
+        pcMemberProposalRepository.addPair(PCMemberProposal(pcMemberId, proposalId, availability, false))
     }
 
     fun getProposalsOfUser(uid: Int) = proposalRepository.getProposalsOfUser(uid)
