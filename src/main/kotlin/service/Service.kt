@@ -16,6 +16,7 @@ class Service {
     private val userConferenceRepository: UserConferenceRepository
     private val proposalRepository: ProposalRepository
     private val pcMemberProposalRepository: PcMemberProposalRepository
+    private val reviewRepository: ReviewRepository
 
     init {
         val configs = readSettingsFile()
@@ -25,6 +26,7 @@ class Service {
             UserConferenceRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         proposalRepository = ProposalRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         pcMemberProposalRepository = PcMemberProposalRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        reviewRepository = ReviewRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -157,9 +159,35 @@ class Service {
         pcMemberProposalRepository.addPair(PCMemberProposal(pcMemberId, proposalId, availability, false))
     }
 
+    fun addReview(pcMemberId: Int, proposalId: Int, reviewResult: ReviewResult){
+        reviewRepository.addPair(Review(pcMemberId, proposalId, reviewResult));
+    }
+
+
     fun getProposalsOfUser(uid: Int) = proposalRepository.getProposalsOfUser(uid)
 
     fun getRolesOfUser(uid: Int, cid: Int) = userConferenceRepository.getRolesOfUser(uid, cid)
 
     fun getProposalsForPcMember(pcMemberId: Int, conferenceId: Int) = proposalRepository.getProposalsForPcMember(pcMemberId, conferenceId)
+
+    fun getReviewsForPaper(proposalId: Int): List<Review> {
+        return reviewRepository.getAll().filter {
+            (it.proposalId == proposalId)
+        }.toList()
+    }
+
+    fun getAssignedPapers(pcMemberId: Int) : List<Proposal>{
+        val proposalIds :List<Int> = pcMemberProposalRepository
+            .getAll()
+            .stream()
+            .filter{
+                (it.pcMemberId == pcMemberId && it.assigned)
+            }
+            .map {
+                it.proposalId
+            }
+            .toList()
+        return proposalIds.map { proposalRepository.getProposalWithGivenId(it) }.toList()
+    }
+
 }

@@ -1,6 +1,7 @@
 package repository
 
 import domain.Proposal
+import exceptions.ConferenceException
 import java.sql.DriverManager
 
 class ProposalRepository(private val url: String, private val db_user: String, private val db_password: String) {
@@ -128,5 +129,30 @@ class ProposalRepository(private val url: String, private val db_user: String, p
             }
         }
         return proposals
+    }
+
+    fun getProposalWithGivenId(id : Int): Proposal {
+        var sqlCommand = "SELECT * FROM Proposals WHERE id= ?";
+        DriverManager.getConnection(url, db_user, db_password).use{connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, id)
+            val resultSet = preparedStatement.executeQuery()
+            if(resultSet.next()){
+                val proposal = Proposal(
+                    resultSet.getInt("id"),
+                    resultSet.getInt("ucid"),
+                    resultSet.getString("abstractText"),
+                    resultSet.getString("paperText"),
+                    resultSet.getString("title"),
+                    resultSet.getString("authors"),
+                    resultSet.getString("keywords"),
+                    resultSet.getBoolean("accepted")
+                )
+
+                return proposal
+            }
+            throw ConferenceException("Proposal with given id does not exist")
+        }
+
     }
 }
