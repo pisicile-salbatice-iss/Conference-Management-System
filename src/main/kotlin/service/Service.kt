@@ -32,7 +32,7 @@ class Service {
     private fun readSettingsFile(): HashMap<String, String> {
         val propertiesMap = HashMap<String, String>()
         val properties = Properties()
-        val configFile = "data/settings.properties"
+        val configFile = "service/settings.properties"
         val fileInputStream: FileInputStream = try {
             FileInputStream(configFile)
         } catch (exception: IOException) {
@@ -131,6 +131,8 @@ class Service {
     ) =
         proposalRepository.addProposal(Proposal(proposalRepository.getProposals().map { proposal -> proposal.id }
             .maxOrNull() ?: 0 + 1, userConferenceId, abstractText, paperText, title, authors, keywords, accepted))
+
+    fun getProposals() = proposalRepository.getProposals()
 
     fun updateProposal(
         id: Int, userConferenceId: Int,
