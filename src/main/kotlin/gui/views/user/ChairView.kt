@@ -69,7 +69,8 @@ class ChairView(private val user: User,
             return
         }
         try {
-            service.addPcMemberProposal(proposal.id,reviewer.id,Availability.OK)
+            service.assignPaper(proposal.id, reviewer.userId)
+            alert(Alert.AlertType.INFORMATION, "Assigned paper");
         }
         catch (exception: ConferenceException)
         {
@@ -82,7 +83,8 @@ class ChairView(private val user: User,
         ListOfPapers.items.addAll(observable)
     }
     private fun loadPCMembers() {
-        val users = FXCollections.observableArrayList(service.getUsersOfConference(conference.id).find { userConference -> userConference.conferenceId == conference.id && userConference.role == Role.REVIEWER })
+        val users = FXCollections.observableArrayList(service.getUsersOfConference(conference.id).find { userConference -> userConference.conferenceId == conference.id &&
+                userConference.role == Role.REVIEWER })
         ListOfPCMembers.items.addAll(users)
     }
 
