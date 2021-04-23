@@ -17,7 +17,9 @@ class ReviewerView(private val user: User,
     private val goBackButton: Button by fxid()
     private val submitResultButton: Button by fxid()
     private val bidProposalButton: Button by fxid()
+    private val attachRecommendations: Button by fxid()
 
+    private val recommendationField: TextField by fxid()
     private val assignedProposalsListView: ListView<Proposal> by fxid()
     private val reviewResultOptions: ComboBox<ReviewResult> by fxid()
 
@@ -50,6 +52,12 @@ class ReviewerView(private val user: User,
             selectProposalHandle()
         }
 
+        attachRecommendations.apply {
+            action {
+                attachRecommendationsHandle()
+
+            }
+        }
         loadData()
     }
 
@@ -103,4 +111,25 @@ class ReviewerView(private val user: User,
         service.addReview(user.id, paper.id, result)
         alert(Alert.AlertType.INFORMATION, "Paper was reviewed");
     }
+
+    private fun attachRecommendationsHandle() {
+        val recommendation = recommendationField.text;
+        if (recommendation == null) {
+            alert(Alert.AlertType.INFORMATION, "Please select a recommendation")
+            return
+        }
+        val paper = assignedProposalsListView.selectedItem
+        if (paper == null) {
+            alert(Alert.AlertType.INFORMATION, "Please select a paper")
+            return
+        }
+
+        if (service.getReviewsForPaper(paper.id).find { review -> review.pcMemberId == user.id } != null) {
+            alert(Alert.AlertType.INFORMATION, "Cannot attach recommendations to already reviewed paper")
+            return
+        }
+        service.attachRecommendations(paper.id, user.id, recommendation)
+        alert(Alert.AlertType.CONFIRMATION, "Recommendations attached")
+    }
+
 }

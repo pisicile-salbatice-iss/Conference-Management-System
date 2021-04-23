@@ -50,11 +50,14 @@ class PcMemberProposalRepository (private val url: String, private val db_user: 
     }
 
     fun assignPaper(proposal: Int, memberId: Int){
-        val sqlCommand = "UPDATE  PcMemberProposal SET assigned = true WHERE pcMemberId = ? AND proposalId = ? "
+        print(proposal)
+        print("\n")
+        print(memberId)
+        val sqlCommand = "UPDATE  PcMemberProposal SET assigned = true WHERE pcmemberid = ? AND proposalid = ? "
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
-            preparedStatement.setInt(1, proposal)
-            preparedStatement.setInt(2, memberId)
+            preparedStatement.setInt(1, memberId)
+            preparedStatement.setInt(2, proposal)
             preparedStatement.executeUpdate()
         }
     }

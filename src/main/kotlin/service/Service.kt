@@ -17,7 +17,7 @@ class Service {
     private val proposalRepository: ProposalRepository
     private val pcMemberProposalRepository: PcMemberProposalRepository
     private val reviewRepository: ReviewRepository
-
+    private val paperRecommendationRepository: PaperRecommendationRepository
     init {
         val configs = readSettingsFile()
         userRepository = UserRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
@@ -27,6 +27,7 @@ class Service {
         proposalRepository = ProposalRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         pcMemberProposalRepository = PcMemberProposalRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         reviewRepository = ReviewRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        paperRecommendationRepository = PaperRecommendationRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -78,10 +79,10 @@ class Service {
 
     fun findConferenceById(id: Int) = conferenceRepository.findConferenceById(id)
     fun getConferences() = conferenceRepository.getConferences()
-    fun addConference(name: String, date: Date, attendancePrice: Int) {
+    fun addConference(name: String, date: Date, attendancePrice: Int, submitPaperDeadline: Date, reviewPaperDeadline: Date) {
         var id = 0
         for (conference in conferenceRepository.getConferences()) id = max(id, conference.id + 1)
-        conferenceRepository.addConference(Conference(id, name, date, attendancePrice))
+        conferenceRepository.addConference(Conference(id, name, date, attendancePrice, submitPaperDeadline, reviewPaperDeadline))
     }
 
     fun getConferencesOfUser(uid: Int) = userConferenceRepository.getConferencesOfUser(uid)
@@ -194,5 +195,16 @@ class Service {
 
     fun assignPaper(proposalId: Int, reviewerId: Int){
         pcMemberProposalRepository.assignPaper(proposalId, reviewerId)
+    }
+
+    fun attachRecommendations(proposalId: Int, reviewerId: Int, recommendation: String) {
+        paperRecommendationRepository.addPair(
+            PaperRecommendation(
+                id = (paperRecommendationRepository.getAll().map { paperRecommendation -> paperRecommendation.id }.maxOrNull() ?: 0) + 1,
+                proposalId = proposalId,
+                reviewerId = reviewerId,
+                recommendation = recommendation
+            )
+        )
     }
 }

@@ -10,7 +10,9 @@ class ConferenceRepository (private val url: String, private val db_user: String
                     id INT PRIMARY KEY,
                     name VARCHAR(50),
                     date DATE,
-                    attendancePrice INT
+                    attendancePrice INT,
+                    submitProposalDeadline DATE,
+                    reviewPaperDeadline DATE
                 )"""
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCreateTableQuery)
@@ -26,7 +28,7 @@ class ConferenceRepository (private val url: String, private val db_user: String
             preparedStatement.setInt(1, id)
             val rs = preparedStatement.executeQuery()
             if (rs.next())
-                conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"))
+                conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"), rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"))
         }
         return conference
     }
@@ -38,7 +40,7 @@ class ConferenceRepository (private val url: String, private val db_user: String
             val preparedStatement = connection.prepareStatement(sqlCommand)
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {
-                val conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"))
+                val conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"),  rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"))
                 conferences.add(conference)
             }
         }
@@ -46,13 +48,15 @@ class ConferenceRepository (private val url: String, private val db_user: String
     }
 
     fun addConference(entity: Conference) {
-        val sqlCommand = "INSERT INTO Conferences (id, name, date, attendancePrice) VALUES (?, ?, ?, ?)"
+        val sqlCommand = "INSERT INTO conferences (id, name, date, attendancePrice, submitProposalDeadline, reviewPaperDeadline) VALUES (?, ?, ?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, entity.id)
             preparedStatement.setString(2, entity.name)
             preparedStatement.setDate(3, entity.date)
             preparedStatement.setInt(4, entity.attendancePrice)
+            preparedStatement.setDate(5, entity.submitPaperDeadline)
+            preparedStatement.setDate(6, entity.reviewPaperDeadline)
             preparedStatement.executeUpdate()
         }
     }

@@ -83,7 +83,7 @@ class ChairView(private val user: User,
         ListOfPapers.items.addAll(observable)
     }
     private fun loadPCMembers() {
-        val users = FXCollections.observableArrayList(service.getUsersOfConference(conference.id).find { userConference -> userConference.conferenceId == conference.id &&
+        val users = FXCollections.observableArrayList(service.getUsersOfConference(conference.id).filter { userConference -> userConference.conferenceId == conference.id &&
                 userConference.role == Role.REVIEWER })
         ListOfPCMembers.items.addAll(users)
     }
