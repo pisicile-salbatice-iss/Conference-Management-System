@@ -79,10 +79,10 @@ class Service {
 
     fun findConferenceById(id: Int) = conferenceRepository.findConferenceById(id)
     fun getConferences() = conferenceRepository.getConferences()
-    fun addConference(name: String, date: Date, attendancePrice: Int, submitPaperDeadline: Date, reviewPaperDeadline: Date) {
+    fun addConference(name: String, date: Date, attendancePrice: Int, submitPaperDeadline: Date, reviewPaperDeadline: Date, biddingPhaseDeadline: Date) {
         var id = 0
         for (conference in conferenceRepository.getConferences()) id = max(id, conference.id + 1)
-        conferenceRepository.addConference(Conference(id, name, date, attendancePrice, submitPaperDeadline, reviewPaperDeadline))
+        conferenceRepository.addConference(Conference(id, name, date, attendancePrice, submitPaperDeadline, reviewPaperDeadline, biddingPhaseDeadline))
     }
 
     fun getConferencesOfUser(uid: Int) = userConferenceRepository.getConferencesOfUser(uid)

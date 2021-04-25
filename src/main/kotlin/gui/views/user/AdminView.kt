@@ -30,7 +30,7 @@ class AdminView(private val service: Service) : View() {
     private val logoutButton: Button by fxid()
     private val submitPaperDeadline: DatePicker by fxid()
     private val reviewPaperDeadline: DatePicker by fxid()
-
+    private val biddingPhaseDeadline: DatePicker by fxid()
 
     init {
         conferenceListView.items.addAll(service.getConferences().asObservable())
@@ -111,7 +111,7 @@ class AdminView(private val service: Service) : View() {
             return
         }
         try {
-            service.addConference(nameField.text, Date.valueOf(dateField.value), priceField.text.toInt(), Date.valueOf(submitPaperDeadline.value), Date.valueOf(reviewPaperDeadline.value))
+            service.addConference(nameField.text, Date.valueOf(dateField.value), priceField.text.toInt(), Date.valueOf(submitPaperDeadline.value), Date.valueOf(reviewPaperDeadline.value), Date.valueOf(biddingPhaseDeadline.value))
             alert(Alert.AlertType.INFORMATION, "Conference added successfully")
 
         } catch (exception: ConferenceException) {

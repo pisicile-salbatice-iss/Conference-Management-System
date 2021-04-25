@@ -7,6 +7,7 @@ import javafx.scene.control.*
 import javafx.scene.layout.GridPane
 import service.Service
 import tornadofx.*
+import java.util.*
 
 class ReviewerView(private val user: User,
                     private val service: Service,
@@ -58,7 +59,11 @@ class ReviewerView(private val user: User,
 
             }
         }
-        loadData()
+        if (Calendar.getInstance().time.before(conference.reviewPaperDeadline)) {
+            loadData()
+        } else {
+            alert(Alert.AlertType.ERROR, "Review deadline has passed. You can no longer review papers.")
+        }
     }
 
     private fun goBackHandle(){
@@ -128,6 +133,7 @@ class ReviewerView(private val user: User,
             alert(Alert.AlertType.INFORMATION, "Cannot attach recommendations to already reviewed paper")
             return
         }
+
         service.attachRecommendations(paper.id, user.id, recommendation)
         alert(Alert.AlertType.CONFIRMATION, "Recommendations attached")
     }
