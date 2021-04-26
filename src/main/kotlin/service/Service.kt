@@ -8,6 +8,7 @@ import java.io.IOException
 import java.lang.Integer.max
 import java.sql.Date
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.streams.toList
 
 class Service {
@@ -208,5 +209,45 @@ class Service {
         )
     }
 
+    fun getProposalWithUserConferenceId(ucid: Int): List<Proposal> {
+        return proposalRepository.getProposals()
+            .filter { (it.userConferenceId == ucid) }
+            .toList();
+    }
+
     fun updateConferenceDeadlines(conference: Conference) = conferenceRepository.updateDeadlines(conference)
+    fun getAcceptedPapers(cid: Int): List<Proposal> {
+        val userConferenceIds :List<Int> = userConferenceRepository
+            .getAll()
+            .stream()
+            .filter{
+                (it.conferenceId == cid)
+            }
+            .map {
+                it.id
+            }
+            .toList()
+
+        val proposals: MutableList<Proposal> = ArrayList()
+
+        userConferenceIds.forEach {
+            proposals.addAll(getProposalWithUserConferenceId(it))
+        }
+
+        return proposals.stream().filter {
+            (it.accepted)
+        }.toList()
+    }
+
+    fun getEmailOfAuthor(proposal: Proposal): String{
+        val userConference = userConferenceRepository.getAll()
+            .first {
+                it.id == proposal.userConferenceId
+            }
+
+        return userRepository.getUsers()
+            .first{
+                it.id == userConference.userId
+            }.email
+    }
 }

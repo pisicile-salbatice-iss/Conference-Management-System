@@ -22,6 +22,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -31,6 +32,7 @@
             <Button fx:id="bidProposalButton" mnemonicParsing="false" text="Bid proposal" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
             <Button fx:id="sendPaperButton" mnemonicParsing="false" text="SendPaper" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
             <Button fx:id="postponeDeadlinesButton" mnemonicParsing="false" text="Postpone deadlines" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
+             <Button fx:id="sendResultsButton" mnemonicParsing="false" text="Send results" GridPane.columnIndex="4" GridPane.halignment="CENTER"/>
          </children>
       </GridPane>
       <Label text="Chair/Co-Chair view" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />

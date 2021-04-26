@@ -6,11 +6,13 @@ import gui.views.conference.BidProposalView
 import javafx.collections.FXCollections
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
-import javafx.scene.control.Label
 import javafx.scene.control.ListView
 import javafx.scene.layout.GridPane
 import service.Service
 import tornadofx.*
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class ChairView(private val user: User,
                 private val service: Service,
@@ -22,6 +24,7 @@ class ChairView(private val user: User,
     private val bidProposalButton: Button by fxid()
     private val sendPaperButton: Button by fxid()
     private val postponeDeadlinesButton: Button by fxid()
+    private val sendResultsButton: Button by fxid()
     private val ListOfPapers: ListView<Proposal> by fxid()
     private val ListOfPCMembers: ListView<UserConference> by fxid()
     init {
@@ -48,8 +51,33 @@ class ChairView(private val user: User,
                 sendPaperToPCMemberHandle()
             }
         }
+
+        sendResultsButton.apply {
+            action {
+                sendResultsHandle()
+            }
+        }
+
         loadPCMembers()
         loadPapers()
+    }
+
+    private fun sendResultsHandle() {
+        val reviewPaperDeadline = conference.reviewPaperDeadline
+
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        if(Date(year, month, day) >= reviewPaperDeadline){
+            alert(Alert.AlertType.INFORMATION, "Review deadline has not passed")
+            return
+        }
+
+        replaceWith(SendResultsView(user, service, this, conference),
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.UP)
+        )
     }
 
     private fun postponeDeadlines(){
