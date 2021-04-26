@@ -98,6 +98,8 @@ class Service {
         )
     )
 
+    fun getConferenceOfProposal(proposal: Proposal) = conferenceRepository.getConferenceOfProposal(proposal)
+
     fun usersWithNameAndPassword(username: String, password: String): List<User> {
         return getUsers().stream().filter {
             (it.name == username) and (it.password == password)
@@ -129,10 +131,11 @@ class Service {
         title: String,
         authors: String,
         keywords: String,
+        finalized: Boolean = false,
         accepted: Boolean = false
     ) =
         proposalRepository.addProposal(Proposal((proposalRepository.getProposals().map { proposal -> proposal.id }
-            .maxOrNull()?: 0)+ 1, userConferenceId, abstractText, paperText, title, authors, keywords, accepted))
+            .maxOrNull()?: 0)+ 1, userConferenceId, abstractText, paperText, title, authors, keywords, finalized, accepted))
 
     fun getProposals() = proposalRepository.getProposals()
 
@@ -143,6 +146,7 @@ class Service {
         title: String,
         authors: String,
         keywords: String,
+        finalized: Boolean = false,
         accepted: Boolean = false
     ) {
         proposalRepository.updateProposal(
@@ -154,6 +158,7 @@ class Service {
                 title,
                 authors,
                 keywords,
+                finalized,
                 accepted
             )
         )
@@ -164,11 +169,13 @@ class Service {
     }
 
     fun addReview(pcMemberId: Int, proposalId: Int, reviewResult: ReviewResult){
-        reviewRepository.addPair(Review(pcMemberId, proposalId, reviewResult));
+        reviewRepository.addPair(Review(pcMemberId, proposalId, reviewResult))
     }
 
 
-    fun getProposalsOfUser(uid: Int) = proposalRepository.getProposalsOfUser(uid)
+    fun getNonFinalizedProposalsOfUser(uid: Int) = proposalRepository.getProposalsOfUser(uid).filter {
+        !it.finalized
+    }
 
     fun getRolesOfUser(uid: Int, cid: Int) = userConferenceRepository.getRolesOfUser(uid, cid)
 
@@ -212,7 +219,7 @@ class Service {
     fun getProposalWithUserConferenceId(ucid: Int): List<Proposal> {
         return proposalRepository.getProposals()
             .filter { (it.userConferenceId == ucid) }
-            .toList();
+            .toList()
     }
 
     fun updateConferenceDeadlines(conference: Conference) = conferenceRepository.updateDeadlines(conference)

@@ -15,6 +15,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     title varchar(50),
                     authors varchar(100),
                     keywords varchar(50),
+                    finalized BOOLEAN,
                     accepted BOOLEAN
                 )"""
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
@@ -25,7 +26,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
 
     fun addProposal(proposal: Proposal) {
         val sqlCommand =
-            "INSERT INTO Proposals (id, ucid, abstractText, paperText, title, authors, keywords, accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO Proposals (id, ucid, abstractText, paperText, title, authors, keywords, finalized, accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, proposal.id)
@@ -35,14 +36,15 @@ class ProposalRepository(private val url: String, private val db_user: String, p
             preparedStatement.setString(5, proposal.title)
             preparedStatement.setString(6, proposal.authors)
             preparedStatement.setString(7, proposal.keywords)
-            preparedStatement.setBoolean(8, proposal.accepted)
+            preparedStatement.setBoolean(8, proposal.finalized)
+            preparedStatement.setBoolean(9, proposal.accepted)
             preparedStatement.executeUpdate()
         }
     }
 
     fun updateProposal(proposal: Proposal) {
         val sqlCommand =
-            "UPDATE Proposals SET ucid=?, abstractText=?, paperText=?, title=?, authors=?, keywords=?, accepted=? WHERE id=?"
+            "UPDATE Proposals SET ucid=?, abstractText=?, paperText=?, title=?, authors=?, keywords=?, finalized=?, accepted=? WHERE id=?"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, proposal.userConferenceId)
@@ -51,8 +53,9 @@ class ProposalRepository(private val url: String, private val db_user: String, p
             preparedStatement.setString(4, proposal.title)
             preparedStatement.setString(5, proposal.authors)
             preparedStatement.setString(6, proposal.keywords)
-            preparedStatement.setBoolean(7, proposal.accepted)
-            preparedStatement.setInt(8, proposal.id)
+            preparedStatement.setBoolean(7, proposal.finalized)
+            preparedStatement.setBoolean(8, proposal.accepted)
+            preparedStatement.setInt(9, proposal.id)
             preparedStatement.executeUpdate()
         }
     }
@@ -72,6 +75,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     rs.getString("title"),
                     rs.getString("authors"),
                     rs.getString("keywords"),
+                    rs.getBoolean("finalized"),
                     rs.getBoolean("accepted")
                 )
                 proposals.add(proposal)
@@ -98,6 +102,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     rs.getString("title"),
                     rs.getString("authors"),
                     rs.getString("keywords"),
+                    rs.getBoolean("finalized"),
                     rs.getBoolean("accepted")
                 )
                 proposals.add(proposal)
@@ -123,6 +128,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     rs.getString("title"),
                     rs.getString("authors"),
                     rs.getString("keywords"),
+                    rs.getBoolean("finalized"),
                     rs.getBoolean("accepted")
                 )
                 proposals.add(proposal)
@@ -146,6 +152,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     resultSet.getString("title"),
                     resultSet.getString("authors"),
                     resultSet.getString("keywords"),
+                    resultSet.getBoolean("finalized"),
                     resultSet.getBoolean("accepted")
                 )
 

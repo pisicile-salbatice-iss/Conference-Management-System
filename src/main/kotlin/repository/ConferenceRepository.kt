@@ -1,6 +1,7 @@
 package repository
 
 import domain.Conference
+import domain.Proposal
 import java.sql.DriverManager
 
 class ConferenceRepository (private val url: String, private val db_user: String, private val db_password: String){
@@ -47,6 +48,20 @@ class ConferenceRepository (private val url: String, private val db_user: String
             }
         }
         return conferences
+    }
+
+    fun getConferenceOfProposal(proposal: Proposal): Conference? {
+        var conference: Conference? = null
+        val sqlCommand = "SELECT C.* FROM Conferences C JOIN UserConference UC ON C.id = UC.cid JOIN Proposals P on P.ucid = UC.ucid WHERE P.id = ?"
+        DriverManager.getConnection(url, db_user, db_password).use { connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, proposal.id)
+            val rs = preparedStatement.executeQuery()
+            if (rs.next()) {
+                conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"),  rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"), rs.getDate("biddingPhaseDeadline"))
+            }
+        }
+        return conference
     }
 
     fun addConference(entity: Conference) {
