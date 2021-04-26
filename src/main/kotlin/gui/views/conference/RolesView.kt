@@ -18,7 +18,7 @@ class RolesView(
     private val user: User,
     private val service: Service,
     private val parent: View,
-    private val conference: Conference
+    private var conference: Conference
 ) : View(user.name + " - " + conference.name) {
 
     override val root: GridPane by fxml()

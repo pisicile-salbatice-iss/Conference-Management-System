@@ -63,4 +63,20 @@ class ConferenceRepository (private val url: String, private val db_user: String
             preparedStatement.executeUpdate()
         }
     }
+
+    fun updateDeadlines(entity: Conference){
+        val sqlCommand = "UPDATE conferences SET " +
+                "submitProposalDeadline= ? ," +
+                "reviewPaperDeadline= ? ," +
+                "biddingPhaseDeadline= ? " +
+                "WHERE id = ?"
+        DriverManager.getConnection(url, db_user, db_password).use{ connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setDate(1, entity.submitPaperDeadline)
+            preparedStatement.setDate(2, entity.reviewPaperDeadline)
+            preparedStatement.setDate(3, entity.biddingPhaseDeadline)
+            preparedStatement.setInt(4, entity.id)
+            preparedStatement.execute()
+        }
+    }
 }

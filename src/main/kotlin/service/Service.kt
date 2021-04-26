@@ -207,4 +207,6 @@ class Service {
             )
         )
     }
+
+    fun updateConferenceDeadlines(conference: Conference) = conferenceRepository.updateDeadlines(conference)
 }

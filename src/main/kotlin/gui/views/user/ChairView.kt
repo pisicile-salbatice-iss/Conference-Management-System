@@ -21,12 +21,19 @@ class ChairView(private val user: User,
     private val goBackButton: Button by fxid()
     private val bidProposalButton: Button by fxid()
     private val sendPaperButton: Button by fxid()
+    private val postponeDeadlinesButton: Button by fxid()
     private val ListOfPapers: ListView<Proposal> by fxid()
     private val ListOfPCMembers: ListView<UserConference> by fxid()
     init {
         goBackButton.apply {
             action{
                 goBackHandle()
+            }
+        }
+
+        postponeDeadlinesButton.apply{
+            action {
+                postponeDeadlines()
             }
         }
 
@@ -43,6 +50,12 @@ class ChairView(private val user: User,
         }
         loadPCMembers()
         loadPapers()
+    }
+
+    private fun postponeDeadlines(){
+        replaceWith(PostponeDeadlinesView(user, service, this, conference),
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT)
+        )
     }
 
     private fun goBackHandle(){
