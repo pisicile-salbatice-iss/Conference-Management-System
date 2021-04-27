@@ -14,7 +14,7 @@ import tornadofx.seconds
 import java.nio.channels.SeekableByteChannel
 import java.sql.Time
 
-abstract class SessionsView (private val user: User,
+class SessionsView (private val user: User,
                              private val service: Service,
                              private val parent: View,
                              private val conference: Conference
