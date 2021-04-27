@@ -7,6 +7,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.lang.Integer.max
 import java.sql.Date
+import java.sql.Time
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.streams.toList
@@ -19,6 +20,7 @@ class Service {
     private val pcMemberProposalRepository: PcMemberProposalRepository
     private val reviewRepository: ReviewRepository
     private val paperRecommendationRepository: PaperRecommendationRepository
+    private val sessionRepository: SessionRepository
     init {
         val configs = readSettingsFile()
         userRepository = UserRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
@@ -29,6 +31,7 @@ class Service {
         pcMemberProposalRepository = PcMemberProposalRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         reviewRepository = ReviewRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         paperRecommendationRepository = PaperRecommendationRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        sessionRepository = SessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -257,4 +260,16 @@ class Service {
                 it.id == userConference.userId
             }.email
     }
+
+    fun addSession(conferenceId: Int, topic:String, time:Time){
+        var id = 0
+        for (session in sessionRepository.getSessions()) id = max(id, session.sessionId + 1)
+        sessionRepository.addSession(Session(id, conferenceId, topic, time))
+    }
+
+    fun getSessionsOfAConference(conferenceId: Int):List<Session>
+    {
+        return sessionRepository.findSessionsByConferecenceId(conferenceId)
+    }
+
 }
