@@ -21,6 +21,8 @@ class Service {
     private val reviewRepository: ReviewRepository
     private val paperRecommendationRepository: PaperRecommendationRepository
     private val sessionRepository: SessionRepository
+    private val proposalSessionRepository: ProposalSessionRepository
+
     init {
         val configs = readSettingsFile()
         userRepository = UserRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
@@ -32,6 +34,7 @@ class Service {
         reviewRepository = ReviewRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         paperRecommendationRepository = PaperRecommendationRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         sessionRepository = SessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        proposalSessionRepository = ProposalSessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -263,10 +266,10 @@ class Service {
             }.email
     }
 
-    fun addSession(conferenceId: Int, topic:String, time:Time){
+    fun addSession(conferenceId: Int, topic:String){
         var id = 0
         for (session in sessionRepository.getSessions()) id = max(id, session.sessionId + 1)
-        sessionRepository.addSession(Session(id, conferenceId, topic, time))
+        sessionRepository.addSession(Session(id, conferenceId, topic))
     }
 
     fun getSessionsOfAConference(conferenceId: Int):List<Session>
@@ -276,4 +279,14 @@ class Service {
 
     fun getPcMemberProposalsOfConferenceNotRefused(conferenceId: Int) = pcMemberProposalRepository.getPcMemberProposalsOfConferenceNotRefused(conferenceId)
 
+    fun getProposalSessionsOfSession(sessionId: Int) = proposalSessionRepository.getProposalSessionsOfSession(sessionId)
+
+    fun addProposalSession(proposalSession: ProposalSession) {
+        if (proposalSessionRepository.getAllProposalSessions().any{
+            it.proposalId == proposalSession.proposalId
+        }) {
+            throw ConferenceException("Paper already attributed to a session")
+        }
+        proposalSessionRepository.addProposalSession(proposalSession)
+    }
 }

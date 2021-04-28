@@ -65,7 +65,7 @@ class PcMemberProposalRepository (private val url: String, private val db_user: 
 
     fun getPcMemberProposalsOfConferenceNotRefused(conferenceId: Int): List<PCMemberProposal> {
         val pairs = mutableListOf<PCMemberProposal>()
-        val sqlCommand = "SELECT PMP.* FROM PcMemberProposal PMP JOIN proposals p on p.id = PMP.proposalid JOIN userconference u on p.ucid = u.ucid WHERE u.cid = ?"
+        val sqlCommand = "SELECT PMP.* FROM PcMemberProposal PMP JOIN proposals p on p.id = PMP.proposalid JOIN userconference u on p.ucid = u.ucid WHERE u.cid = ? AND PMP.availability != 'REFUSED'"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, conferenceId)

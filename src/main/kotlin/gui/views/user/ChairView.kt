@@ -68,7 +68,7 @@ class ChairView(
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        if (Date(year, month, day) >= reviewPaperDeadline) {
+        if (Calendar.getInstance().time.before(conference.reviewPaperDeadline)){
             alert(Alert.AlertType.INFORMATION, "Review deadline has not passed")
             return
         }

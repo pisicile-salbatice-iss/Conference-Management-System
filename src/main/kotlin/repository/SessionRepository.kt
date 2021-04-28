@@ -9,8 +9,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
                 CREATE TABLE IF NOT EXISTS Sessions (
                     sessionId INT PRIMARY KEY,
                     conferenceId INT REFERENCES Conferences(id),
-                    topic VARCHAR(50),
-                    time TIME
+                    topic VARCHAR(50)
                 )"""
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCreateTableQuery)
@@ -26,7 +25,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
             val preparedStatement = connection.prepareStatement(sqlCommand)
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {
-                val session = Session(rs.getInt("sessionId"),rs.getInt("confereceId"),rs.getString("topic"), rs.getTime("time"))
+                val session = Session(rs.getInt("sessionId"), rs.getInt("conferenceId"), rs.getString("topic"))
                 sessions.add(session)
             }
         }
@@ -41,7 +40,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
             preparedStatement.setInt(1, conferenceId)
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {
-                val session = Session(rs.getInt("sessionId"),rs.getInt("conferenceId"),rs.getString("topic"), rs.getTime("time"))
+                val session = Session(rs.getInt("sessionId"), rs.getInt("conferenceId"), rs.getString("topic"))
                 sessions.add(session)
             }
         }
@@ -49,13 +48,12 @@ class SessionRepository(private val url: String, private val db_user: String, pr
     }
 
     fun addSession(entity: Session) {
-        val sqlCommand = "INSERT INTO Sessions (sessionId,conferenceId,topic, time) VALUES (?, ?, ?, ?)"
+        val sqlCommand = "INSERT INTO Sessions (sessionId, conferenceId, topic) VALUES (?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, entity.sessionId)
             preparedStatement.setInt(2, entity.conferenceId)
             preparedStatement.setString(3, entity.topic)
-            preparedStatement.setTime(4, entity.hour)
             preparedStatement.executeUpdate()
         }
     }
