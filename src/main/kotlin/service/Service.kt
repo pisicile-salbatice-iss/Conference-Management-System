@@ -103,6 +103,8 @@ class Service {
 
     fun getConferenceOfProposal(proposal: Proposal) = conferenceRepository.getConferenceOfProposal(proposal)
 
+    fun getProposalsOfConference(conferenceId: Int) = proposalRepository.getProposalsOfConference(conferenceId)
+
     fun usersWithNameAndPassword(username: String, password: String): List<User> {
         return getUsers().stream().filter {
             (it.name == username) and (it.password == password)
@@ -271,5 +273,7 @@ class Service {
     {
         return sessionRepository.findSessionsByConferecenceId(conferenceId)
     }
+
+    fun getPcMemberProposalsOfConferenceNotRefused(conferenceId: Int) = pcMemberProposalRepository.getPcMemberProposalsOfConferenceNotRefused(conferenceId)
 
 }

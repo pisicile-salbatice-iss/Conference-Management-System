@@ -48,6 +48,9 @@ class RolesView(
                 ReviewerView(user, service, this, conference),
                 ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT)
             )
+            null -> {
+
+            }
             else -> {
                 alert(Alert.AlertType.INFORMATION, "Not implemented")
             }

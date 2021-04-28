@@ -1,6 +1,5 @@
 package repository
 
-import domain.Conference
 import domain.Session
 import java.sql.DriverManager
 
@@ -54,7 +53,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, entity.sessionId)
-            preparedStatement.setInt(2, entity.confereceId)
+            preparedStatement.setInt(2, entity.conferenceId)
             preparedStatement.setString(3, entity.topic)
             preparedStatement.setTime(4, entity.hour)
             preparedStatement.executeUpdate()

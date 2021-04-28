@@ -86,11 +86,38 @@ class ProposalRepository(private val url: String, private val db_user: String, p
 
     fun getProposalsForPcMember(pcMemberId: Int, conferenceId: Int): List<Proposal> {
         val proposals = mutableListOf<Proposal>()
-        val sqlCommand = "SELECT * FROM Proposals WHERE ucid NOT IN (SELECT ucid FROM UserConference WHERE uid=? AND cid=?)"
+        val sqlCommand = "SELECT P.* FROM Proposals P JOIN userconference UC on P.ucid = UC.ucid WHERE UC.cid = ? AND P.ucid NOT IN (SELECT ucid FROM UserConference WHERE uid=? AND cid=?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
-            preparedStatement.setInt(1, pcMemberId)
-            preparedStatement.setInt(2, conferenceId)
+            preparedStatement.setInt(1, conferenceId)
+            preparedStatement.setInt(2, pcMemberId)
+            preparedStatement.setInt(3, conferenceId)
+
+            val rs = preparedStatement.executeQuery()
+            while (rs.next()) {
+                val proposal = Proposal(
+                    rs.getInt("id"),
+                    rs.getInt("ucid"),
+                    rs.getString("abstractText"),
+                    rs.getString("paperText"),
+                    rs.getString("title"),
+                    rs.getString("authors"),
+                    rs.getString("keywords"),
+                    rs.getBoolean("finalized"),
+                    rs.getBoolean("accepted")
+                )
+                proposals.add(proposal)
+            }
+        }
+        return proposals
+    }
+
+    fun getProposalsOfConference(conferenceId: Int): List<Proposal> {
+        val proposals = mutableListOf<Proposal>()
+        val sqlCommand = "SELECT P.* FROM Proposals P JOIN userconference UC on P.ucid = UC.ucid WHERE UC.cid = ?"
+        DriverManager.getConnection(url, db_user, db_password).use { connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, conferenceId)
 
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {

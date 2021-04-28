@@ -79,7 +79,7 @@ class BidProposalView(private val user: User,
     }
 
     private fun selectProposalHandle(){
-        val proposal = proposalsListView.selectionModel.selectedItem
+        val proposal = proposalsListView.selectionModel.selectedItem ?: return
         abstractLabel.text = proposal.abstractText
         paperLabel.text = proposal.paperText
         titleLabel.text =  proposal.title

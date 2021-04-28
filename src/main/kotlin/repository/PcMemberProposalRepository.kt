@@ -1,6 +1,7 @@
 package repository
 
 import domain.Availability
+import domain.Conference
 import domain.PCMemberProposal
 import java.sql.DriverManager
 
@@ -60,5 +61,23 @@ class PcMemberProposalRepository (private val url: String, private val db_user: 
             preparedStatement.setInt(2, proposal)
             preparedStatement.executeUpdate()
         }
+    }
+
+    fun getPcMemberProposalsOfConferenceNotRefused(conferenceId: Int): List<PCMemberProposal> {
+        val pairs = mutableListOf<PCMemberProposal>()
+        val sqlCommand = "SELECT PMP.* FROM PcMemberProposal PMP JOIN proposals p on p.id = PMP.proposalid JOIN userconference u on p.ucid = u.ucid WHERE u.cid = ?"
+        DriverManager.getConnection(url, db_user, db_password).use { connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, conferenceId)
+            val rs = preparedStatement.executeQuery()
+            while (rs.next())
+                pairs.add(PCMemberProposal(
+                    rs.getInt("pcMemberId"),
+                    rs.getInt("proposalId"),
+                    Availability.valueOf(rs.getString("availability")),
+                    rs.getBoolean("assigned")
+                ))
+        }
+        return pairs
     }
 }

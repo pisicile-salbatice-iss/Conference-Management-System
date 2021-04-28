@@ -55,7 +55,7 @@ class UserView(private val user: User, private val service: Service) : View(user
     }
 
     private fun handleChooseConference(){
-        val conference = conferenceListView.selectionModel.selectedItem
+        val conference = conferenceListView.selectionModel.selectedItem ?: return
         val conferencesOfUser = service.getConferencesOfUser(user.id)
         if (!conferencesOfUser.any { userConference -> userConference.conferenceId == conference.id })
             alert(Alert.AlertType.INFORMATION, "User must participate in conference")
