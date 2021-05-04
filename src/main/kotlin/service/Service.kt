@@ -93,6 +93,11 @@ class Service {
     }
 
     fun getConferencesOfUser(uid: Int) = userConferenceRepository.getConferencesOfUser(uid)
+
+    fun getUserConference(uid: Int, cid: Int) = userConferenceRepository.findUserConference(uid, cid)
+
+    fun pay(uid: Int, cid: Int) = userConferenceRepository.pay(uid, cid)
+
     fun getUsersOfConference(cid: Int) = userConferenceRepository.getUsersOfConference(cid)
     fun addUserToConference(uid: Int, cid: Int, role: Role, paid: Boolean) = userConferenceRepository.addPair(
         UserConference(
