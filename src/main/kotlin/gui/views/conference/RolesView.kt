@@ -4,6 +4,7 @@ import domain.Conference
 import domain.Role
 import domain.User
 import gui.views.user.ChairView
+import gui.views.user.ListenerView
 import gui.views.user.ReviewerView
 import gui.views.user.UserView
 import javafx.collections.FXCollections
@@ -46,6 +47,10 @@ class RolesView(
             )
             Role.REVIEWER -> replaceWith(
                 ReviewerView(user, service, this, conference),
+                ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT)
+            )
+            Role.LISTENER -> replaceWith(
+                ListenerView(user, service, this, conference),
                 ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT)
             )
             null -> {

@@ -22,6 +22,7 @@ class Service {
     private val paperRecommendationRepository: PaperRecommendationRepository
     private val sessionRepository: SessionRepository
     private val proposalSessionRepository: ProposalSessionRepository
+    private val userSectionRepository: UserSectionRepository
 
     init {
         val configs = readSettingsFile()
@@ -35,6 +36,7 @@ class Service {
         paperRecommendationRepository = PaperRecommendationRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         sessionRepository = SessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         proposalSessionRepository = ProposalSessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        userSectionRepository = UserSectionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -108,6 +110,22 @@ class Service {
             paid
         )
     )
+
+    fun addUserToSection(uid: Int, sid: Int) = userSectionRepository.addPair(UserSection(uid, sid))
+
+    fun getSectionsOfUser(uid: Int): List<Session>{
+        var sids: List<Int> = userSectionRepository.getSectionsOfUser(uid)
+        var sessions = sessionRepository.getSessions()
+
+        var sectionsOfUser = mutableListOf<Session>()
+
+        sids.forEach {
+            var sessionId = it
+            sectionsOfUser.add(sessions.first { it  -> it.sessionId == sessionId })
+        }
+
+        return sectionsOfUser
+    }
 
     fun getConferenceOfProposal(proposal: Proposal) = conferenceRepository.getConferenceOfProposal(proposal)
 
