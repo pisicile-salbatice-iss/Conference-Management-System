@@ -3,6 +3,7 @@ package gui.views.user
 import domain.*
 import exceptions.ConferenceException
 import gui.views.conference.BidProposalView
+import gui.views.conference.ChangeSpeakerView
 import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
 import javafx.scene.control.Alert
@@ -27,6 +28,7 @@ class ChairView(
     private val sendResultsButton: Button by fxid()
     private val payButton: Button by fxid()
     private val ViewSessions: Button by fxid()
+    private val modifySpeakers: Button by fxid()
     private val ListOfPCMembers: ListView<PCMemberProposal> by fxid()
 
     init {
@@ -65,7 +67,20 @@ class ChairView(
             }
         }
 
+        modifySpeakers.apply{
+            action {
+                handleModifySpeakers()
+            }
+        }
+
         loadPCMembers()
+    }
+
+    private fun handleModifySpeakers() {
+        replaceWith(
+            ChangeSpeakerView(service, this, conference),
+            ViewTransition.Explode(0.3.seconds)
+        )
     }
 
     private fun pay() {
