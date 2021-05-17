@@ -98,7 +98,7 @@ class UserConferenceRepository (private val url: String, private val db_user: St
         return pairs
     }
 
-    fun makeAuthor(userConference: UserConference) {
+    fun changeAuthorToSpeaker(userConference: UserConference) {
         val sqlCommand = "UPDATE UserConference SET role = ? WHERE ucid = ?";
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
@@ -116,6 +116,18 @@ class UserConferenceRepository (private val url: String, private val db_user: St
             preparedStatement.setInt(3, userConference.conferenceId)
             preparedStatement.setString(4, userConference.role.name)
             preparedStatement.setBoolean(5, userConference.paid)
+            preparedStatement.executeUpdate()
+        }
+    }
+
+    fun changeSpeakerToAuthor(uid: Int, cid: Int) {
+        val sqlCommand = "UPDATE UserConference SET role=? WHERE uid=? AND cid=? AND role=?"
+        DriverManager.getConnection(url, db_user, db_password).use { connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setString(1, Role.AUTHOR.name)
+            preparedStatement.setInt(2, uid)
+            preparedStatement.setInt(3, cid)
+            preparedStatement.setString(4, Role.SPEAKER.name)
             preparedStatement.executeUpdate()
         }
     }
