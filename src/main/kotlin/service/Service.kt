@@ -288,7 +288,6 @@ class Service {
 
     fun getSectionsOfSpeaker(userId: Int): List<Session> {
         val proposalIds = proposalRepository.getProposalsOfUser(userId).map {it.id}
-        val sessionList: List<Session>
         return sessionRepository.getSessions().filter {
             session -> proposalSessionRepository.getProposalSessionsOfSession(sessionId = session.sessionId)
             .find { proposalSession -> proposalIds.contains(proposalSession.proposalId)} != null
@@ -325,7 +324,7 @@ class Service {
         return proposalRepository.getProposalWithGivenId(ps!!.proposalId)
     }
 
-    fun getDateOfPresentation(user: User, proposal: Proposal, conference: Conference, session: Session): Date {
+    fun getDateOfPresentation(proposal: Proposal, session: Session): Date {
         return proposalSessionRepository.getAllProposalSessions().find {
             proposalSession -> proposalSession.proposalId == proposal.id && proposalSession.sessionId == session.sessionId
         }!!.time

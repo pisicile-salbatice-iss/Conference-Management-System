@@ -9,11 +9,8 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.GridPane
 import javafx.stage.FileChooser
-import org.apache.commons.io.FileUtils
 import service.Service
-import tornadofx.View
-import tornadofx.action
-import tornadofx.label
+import tornadofx.*
 import java.io.File
 import java.io.IOException
 
@@ -28,18 +25,32 @@ class SpeakerSessionView(
     private val timeToPresentLabel: Label by fxid()
     private val paperTextLabel: Label by fxid()
     private val addPresentationButton: Button by fxid()
+    private val back: Button by fxid()
     private val paper: Proposal = service.getPaperOfSpeakerAtSession(user, conference, session)
 
     init {
         print(paper.paperText)
         paperTextLabel.text = paper.paperText
-        timeToPresentLabel.text =service.getDateOfPresentation(user, paper, conference, session).toString()
+        timeToPresentLabel.text =service.getDateOfPresentation(paper, session).toString()
         addPresentationButton.apply {
             action {
                 uploadPresentation()
             }
         }
+        back.apply {
+            action {
+                goBackHandle()
+            }
+        }
     }
+
+    private fun goBackHandle() {
+        replaceWith(
+            parent,
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT)
+        )
+    }
+
     private fun uploadPresentation() {
         val fileChooser: FileChooser = FileChooser()
         fileChooser.title = "Upload presentation"

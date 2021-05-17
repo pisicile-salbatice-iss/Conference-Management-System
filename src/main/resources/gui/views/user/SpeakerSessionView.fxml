@@ -21,6 +21,9 @@
     <Label fx:id="paperTextLabel" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="CENTER" />
     <Label text="You have to present this paper at the time: " GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER" />
     <Label fx:id="timeToPresentLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="CENTER" />
-    <Button fx:id="addPresentationButton" mnemonicParsing="false" text="Upload Presentation" GridPane.halignment="CENTER"
-            GridPane.columnIndex="0" GridPane.rowIndex="3" prefWidth="150.0"/>
+    <VBox GridPane.halignment="CENTER"
+          GridPane.columnIndex="0" GridPane.rowIndex="3" prefWidth="150.0">
+        <Button fx:id="addPresentationButton" mnemonicParsing="false" text="Upload Presentation" prefWidth="150.0"/>
+        <Button fx:id="back" mnemonicParsing="false" text="Back" prefWidth="150.0"/>
+    </VBox>
 </GridPane>
