@@ -286,6 +286,15 @@ class Service {
             ?.let { userConferenceRepository.makeAuthor(it) }
     }
 
+    fun getSectionsOfSpeaker(userId: Int): List<Session> {
+        val proposalIds = proposalRepository.getProposalsOfUser(userId).map {it.id}
+        val sessionList: List<Session>
+        return sessionRepository.getSessions().filter {
+            session -> proposalSessionRepository.getProposalSessionsOfSession(sessionId = session.sessionId)
+            .find { proposalSession -> proposalIds.contains(proposalSession.proposalId)} != null
+        }
+    }
+
     fun getEmailOfAuthor(proposal: Proposal): String{
         val userConference = userConferenceRepository.getAll()
             .first {
@@ -304,6 +313,23 @@ class Service {
         sessionRepository.addSession(Session(id, conferenceId, topic))
     }
 
+    fun getPaperOfSpeakerAtSession(speaker: User, conference: Conference, session: Session): Proposal {
+        userConferenceRepository.findUserConference(speaker.id, conference.id)
+        val ps = proposalSessionRepository.getProposalSessionsOfSession(session.sessionId)
+            .find { proposalSession ->
+                proposalRepository.getProposalWithGivenId(proposalSession.proposalId).userConferenceId == userConferenceRepository.findUserConference(
+                    speaker.id,
+                    conference.id
+                )!!.id
+            }
+        return proposalRepository.getProposalWithGivenId(ps!!.proposalId)
+    }
+
+    fun getDateOfPresentation(user: User, proposal: Proposal, conference: Conference, session: Session): Date {
+        return proposalSessionRepository.getAllProposalSessions().find {
+            proposalSession -> proposalSession.proposalId == proposal.id && proposalSession.sessionId == session.sessionId
+        }!!.time
+    }
     fun getSessionsOfAConference(conferenceId: Int):List<Session>
     {
         return sessionRepository.findSessionsByConferecenceId(conferenceId)
