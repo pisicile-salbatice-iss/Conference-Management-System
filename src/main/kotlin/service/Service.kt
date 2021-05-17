@@ -277,6 +277,15 @@ class Service {
         }.toList()
     }
 
+    fun getAuthorOfProposal(proposal: Proposal): User? {
+        return userRepository.findUserById(userConferenceRepository.getAll().first { it.id == proposal.userConferenceId }.userId)
+    }
+
+    fun makeAcceptedAuthorSpeaker(author: User, conferenceId: Int) {
+        userConferenceRepository.findUserConference(author.id, conferenceId)
+            ?.let { userConferenceRepository.makeAuthor(it) }
+    }
+
     fun getEmailOfAuthor(proposal: Proposal): String{
         val userConference = userConferenceRepository.getAll()
             .first {
