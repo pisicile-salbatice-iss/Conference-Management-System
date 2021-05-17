@@ -60,7 +60,7 @@ class PayForConferenceView(private val user: User,
         val userConference = service.getUserConference(user.id, conference.id)
         if (userConference != null) {
             userConference.paid = true
-            alert(Alert.AlertType.CONFIRMATION, "Successfully paid")
+            alert(Alert.AlertType.INFORMATION, "Successfully paid") //No need for confirmation, information is enough
             payForConferenceButton.isDisable = true
             service.pay(user.id, conference.id)
         }

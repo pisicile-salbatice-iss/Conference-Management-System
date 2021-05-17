@@ -9,6 +9,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.layout.GridPane
+import org.postgresql.util.PSQLException
 import service.Service
 import tornadofx.*
 
@@ -65,10 +66,13 @@ class ListenerView(private val user: User,
             alert(Alert.AlertType.ERROR, "No section selected")
             return
         }
-
-        service.addUserToSection(user.id, selectedSection!!.sessionId)
-        loadUserSections()
-        alert(Alert.AlertType.INFORMATION, "Section was chosen")
+        try {
+            service.addUserToSection(user.id, selectedSection!!.sessionId)
+            loadUserSections()
+            alert(Alert.AlertType.INFORMATION, "Section was chosen")
+        } catch (e: PSQLException) {
+            alert(Alert.AlertType.ERROR, "The section has already been chosen")
+        }
     }
 
     private fun loadSessions() {
