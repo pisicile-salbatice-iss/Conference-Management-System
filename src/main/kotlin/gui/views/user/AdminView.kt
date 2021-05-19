@@ -24,9 +24,10 @@ class AdminView(private val service: Service) : View() {
     private val dateField: DatePicker by fxid()
     private val addConferenceButton: Button by fxid()
     private val conferenceListView: ListView<Conference> by fxid()
-    private val chairNameField: TextField by fxid()
+    private val usernameField: TextField by fxid()
     private val coChairRadioButton: CheckBox by fxid()
     private val inviteChairButton: Button by fxid()
+    private val inviteReviewerButton: Button by fxid()
     private val logoutButton: Button by fxid()
     private val submitPaperDeadline: DatePicker by fxid()
     private val reviewPaperDeadline: DatePicker by fxid()
@@ -36,6 +37,7 @@ class AdminView(private val service: Service) : View() {
         conferenceListView.items.addAll(service.getConferences().asObservable())
         addConferenceButton.apply { action { handleCreateConference() } }
         inviteChairButton.apply { action { handleInviteChair() } }
+        inviteReviewerButton.apply { action { handleInviteReviewerButton() } }
         logoutButton.apply { action { handleLogout() }}
     }
 
@@ -43,8 +45,57 @@ class AdminView(private val service: Service) : View() {
         replaceWith(LoginView::class, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
     }
 
+    private fun handleInviteReviewerButton() {
+        val username = usernameField.text
+        if (!service.isUsernameExistent(username)) {
+            alert(Alert.AlertType.ERROR, "Username does not exist in the database")
+            return
+        }
+
+        val id = service.getIdOfUsername(username)
+        val email = service.getEmailOfUser(username)
+
+        val conference = getSelectedConference()
+        if (conference == null) {
+            alert(Alert.AlertType.ERROR, "No conference selected")
+            return
+        }
+
+        val from = "admin@cms.com"
+        val host = "localhost"
+        val properties = System.getProperties()
+        properties.setProperty("mail.smtp.host", host)
+        val session = Session.getDefaultInstance(properties)
+        try {
+            val message = MimeMessage(session)
+            message.setFrom(InternetAddress(from))
+            message.addRecipient(Message.RecipientType.TO, InternetAddress(email))
+            message.subject = "Conference Invitation"
+            var text = "You are invited as a reviewer to conference "
+            text += conference.name
+            text += ". We are looking forward to hearing from you!"
+            message.setText(text)
+            Transport.send(message)
+        } catch (exception: MessagingException) {
+            alert(Alert.AlertType.ERROR, "Email could not be sent: ${exception.message}")
+            return
+        }
+
+        try {
+            service.addUserToConference(
+                uid = id,
+                cid = conference.id,
+                role = Role.REVIEWER,
+                paid = false
+            )
+            alert(Alert.AlertType.INFORMATION, "Email sent successfully")
+        } catch (e: ConferenceException) {
+            alert(Alert.AlertType.ERROR, e.message)
+        }
+    }
+
     private fun handleInviteChair() {
-        val username = chairNameField.text
+        val username = usernameField.text
         if (!service.isUsernameExistent(username)) {
             alert(Alert.AlertType.ERROR, "Username does not exist in the database")
             return
@@ -79,7 +130,7 @@ class AdminView(private val service: Service) : View() {
             text += ". We are looking forward to hearing from you!"
             message.setText(text)
             Transport.send(message)
-            alert(Alert.AlertType.CONFIRMATION, "Email sent successfully")
+            alert(Alert.AlertType.INFORMATION, "Email sent successfully")
         } catch (exception: MessagingException) {
             alert(Alert.AlertType.ERROR, "Email could not be sent: ${exception.message}")
             return

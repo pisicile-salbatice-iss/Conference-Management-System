@@ -2,9 +2,7 @@ package service
 
 import domain.*
 import exceptions.ConferenceException
-import javafx.scene.control.Alert
 import repository.*
-import tornadofx.alert
 import java.io.FileInputStream
 import java.io.IOException
 import java.lang.Integer.max
@@ -121,15 +119,20 @@ class Service {
     fun pay(uid: Int, cid: Int) = userConferenceRepository.pay(uid, cid)
 
     fun getUsersOfConference(cid: Int) = userConferenceRepository.getUsersOfConference(cid)
-    fun addUserToConference(uid: Int, cid: Int, role: Role, paid: Boolean) = userConferenceRepository.addPair(
-        UserConference(
-            (userConferenceRepository.getAll().map { userConference -> userConference.id }.maxOrNull() ?: 0) + 1,
-            uid,
-            cid,
-            role,
-            paid
+    fun addUserToConference(uid: Int, cid: Int, role: Role, paid: Boolean) {
+        if (userConferenceRepository.getAll().any{
+                it.userId == uid && it.conferenceId == cid && it.role == role
+        }) throw ConferenceException("User is already reviewer to that conference")
+        userConferenceRepository.addPair(
+            UserConference(
+                (userConferenceRepository.getAll().map { userConference -> userConference.id }.maxOrNull() ?: 0) + 1,
+                uid,
+                cid,
+                role,
+                paid
+            )
         )
-    )
+    }
 
     fun addUserToSection(uid: Int, sid: Int) = userSectionRepository.addPair(UserSection(uid, sid))
 
