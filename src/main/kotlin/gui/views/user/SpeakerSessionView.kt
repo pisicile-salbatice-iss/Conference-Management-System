@@ -16,10 +16,10 @@ import java.io.IOException
 
 class SpeakerSessionView(
     private val user: User,
-    private val service: Service,
+    service: Service,
     private val parent: View,
-    private val conference: Conference,
-    private val session: Session
+    conference: Conference,
+    session: Session
 ) : View(user.name + " - " + session.topic) {
     override val root: GridPane by fxml()
     private val timeToPresentLabel: Label by fxid()
@@ -52,7 +52,7 @@ class SpeakerSessionView(
     }
 
     private fun uploadPresentation() {
-        val fileChooser: FileChooser = FileChooser()
+        val fileChooser = FileChooser()
         fileChooser.title = "Upload presentation"
         fileChooser.extensionFilters.addAll(
             FileChooser.ExtensionFilter("PDF", "*.pdf"),

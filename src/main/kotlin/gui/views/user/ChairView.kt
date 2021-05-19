@@ -131,7 +131,7 @@ class ChairView(
         }
         try {
             service.assignPaper(reviewer.proposalId, reviewer.pcMemberId)
-            alert(Alert.AlertType.INFORMATION, "Assigned paper");
+            alert(Alert.AlertType.INFORMATION, "Assigned paper")
             loadPCMembers()
         } catch (exception: ConferenceException) {
             alert(Alert.AlertType.ERROR, exception.message)

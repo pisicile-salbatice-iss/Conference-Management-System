@@ -16,10 +16,11 @@ import tornadofx.*
 import java.sql.Date
 import java.util.*
 
-class PostponeDeadlinesView(private val user: User,
-                            private val service: Service,
-                            private val parent: View,
-                            private var conference: Conference
+class PostponeDeadlinesView(
+    user: User,
+    private val service: Service,
+    private val parent: View,
+    private var conference: Conference
 ) : View(user.name + " - " + conference.name) {
     override val root: GridPane by fxml()
     private val goBackButton: Button by fxid()

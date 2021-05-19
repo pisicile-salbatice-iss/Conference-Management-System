@@ -6,12 +6,12 @@ import domain.User
 import gui.views.conference.RolesView
 import gui.views.login.LoginView
 import javafx.collections.FXCollections
-import javafx.scene.control.*
+import javafx.scene.control.Alert
+import javafx.scene.control.Button
+import javafx.scene.control.ListView
 import javafx.scene.layout.GridPane
 import service.Service
 import tornadofx.*
-import java.time.LocalDateTime
-import java.util.*
 
 class UserView(private val user: User, private val service: Service) : View(user.name) {
     override val root: GridPane by fxml()

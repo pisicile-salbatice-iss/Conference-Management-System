@@ -147,7 +147,7 @@ class ReviewerView(
     }
 
     private fun attachRecommendationsHandle() {
-        val recommendation = recommendationField.text;
+        val recommendation = recommendationField.text
         if (recommendation == null) {
             alert(Alert.AlertType.INFORMATION, "Please select a recommendation")
             return

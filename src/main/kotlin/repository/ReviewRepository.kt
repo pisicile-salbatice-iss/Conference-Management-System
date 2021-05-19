@@ -1,8 +1,8 @@
-package repository;
+package repository
 
 import domain.Review
 import domain.ReviewResult
-import java.sql.DriverManager;
+import java.sql.DriverManager
 
 class ReviewRepository(private val url: String, private val db_user: String, private val db_password: String) {
     init {

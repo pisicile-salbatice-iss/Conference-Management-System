@@ -45,6 +45,7 @@ class AdminView(private val service: Service) : View() {
         replaceWith(LoginView::class, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
     }
 
+    @Suppress("DuplicatedCode")
     private fun handleInviteReviewerButton() {
         val username = usernameField.text
         if (!service.isUsernameExistent(username)) {
@@ -94,6 +95,7 @@ class AdminView(private val service: Service) : View() {
         }
     }
 
+    @Suppress("DuplicatedCode")
     private fun handleInviteChair() {
         val username = usernameField.text
         if (!service.isUsernameExistent(username)) {
