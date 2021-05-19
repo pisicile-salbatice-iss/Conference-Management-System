@@ -42,11 +42,16 @@ class SendResultsView (private val user: User,
 
         sendMailButton.apply {
             action {
+                makeAuthorBeSpeaker()
                 sendResultViaEmail()
             }
         }
 
         loadData()
+    }
+
+    private fun makeAuthorBeSpeaker() {
+        service.getAuthorOfProposal(selectedProposal)?.let { service.makeAcceptedAuthorSpeaker(it, conference.id) }
     }
 
     private fun sendResultViaEmail() {
@@ -86,7 +91,7 @@ class SendResultsView (private val user: User,
         }
 
         abstractTextField.text = proposal.abstractText
-        selectedProposal = proposal;
+        selectedProposal = proposal
     }
 
     private fun loadData() {

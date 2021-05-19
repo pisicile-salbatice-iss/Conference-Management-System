@@ -5,6 +5,7 @@ import domain.Proposal
 import domain.ReviewResult
 import domain.User
 import gui.views.conference.BidProposalView
+import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
 import javafx.scene.control.*
 import javafx.scene.layout.GridPane
@@ -22,6 +23,7 @@ class ReviewerView(
     private val goBackButton: Button by fxid()
     private val submitResultButton: Button by fxid()
     private val bidProposalButton: Button by fxid()
+    private val payForConference: Button by fxid()
     private val attachRecommendations: Button by fxid()
 
     private val recommendationField: TextField by fxid()
@@ -63,11 +65,25 @@ class ReviewerView(
 
             }
         }
+
+        payForConference.apply {
+            action {
+                pay()
+            }
+        }
+
         if (Calendar.getInstance().time.before(conference.reviewPaperDeadline)) {
             loadData()
         } else {
             alert(Alert.AlertType.ERROR, "Review deadline has passed. You can no longer review papers.")
         }
+    }
+
+    private fun pay() {
+        replaceWith(
+            PayForConferenceView(user, service, this, conference),
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT)
+        )
     }
 
     private fun goBackHandle() {
@@ -121,15 +137,17 @@ class ReviewerView(
             return
         }
         try {
-            service.addReview(user.id, paper.id, result)
-            alert(Alert.AlertType.INFORMATION, "Paper was reviewed");
+            val pair = service.review(user.id, paper.id, result)
+            if (pair.first != pair.second)
+                alert(Alert.AlertType.INFORMATION, "Paper was reviewed, ${pair.first} accepts out of ${pair.second} needed")
+            else alert(Alert.AlertType.INFORMATION, "Paper has been accepted! The necessary ${pair.second} accepts have been reached")
         } catch (e: Exception) {
-            alert(Alert.AlertType.ERROR, "Paper was already reviewed");
+            e.message?.let { alert(Alert.AlertType.ERROR, it) }
         }
     }
 
     private fun attachRecommendationsHandle() {
-        val recommendation = recommendationField.text;
+        val recommendation = recommendationField.text
         if (recommendation == null) {
             alert(Alert.AlertType.INFORMATION, "Please select a recommendation")
             return

@@ -1,7 +1,5 @@
 package repository
 
-import domain.Conference
-import domain.PCMemberProposal
 import domain.ProposalSession
 import java.sql.DriverManager
 
@@ -28,7 +26,7 @@ class ProposalSessionRepository(private val url: String, private val db_user: St
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {
                 val proposalSession =
-                    ProposalSession(rs.getInt("proposalId"), rs.getInt("proposalId"), rs.getDate("time"))
+                    ProposalSession(rs.getInt("proposalId"), rs.getInt("sessionId"), rs.getDate("time"))
                 proposalSessions.add(proposalSession)
             }
         }

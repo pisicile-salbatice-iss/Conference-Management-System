@@ -46,11 +46,12 @@
 											"_parent": {
 												"$ref": "AAAAAAF4Y7vOsq8Tm+w="
 											},
-											"visible": false,
 											"font": "Arial;13;0",
-											"left": 672,
-											"top": 752,
-											"height": 13
+											"left": 125,
+											"top": 116,
+											"width": 719,
+											"height": 13,
+											"text": "«root»"
 										},
 										{
 											"_type": "LabelView",
@@ -60,7 +61,7 @@
 											},
 											"font": "Arial;13;1",
 											"left": 125,
-											"top": 118,
+											"top": 131,
 											"width": 719,
 											"height": 13,
 											"text": "domain"
@@ -89,6 +90,7 @@
 											"font": "Arial;13;0",
 											"left": 672,
 											"top": 752,
+											"width": 238.6845703125,
 											"height": 13,
 											"horizontalAlignment": 1
 										}
@@ -97,7 +99,7 @@
 									"left": 120,
 									"top": 111,
 									"width": 729,
-									"height": 25,
+									"height": 38,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAF4Y7vOsq8U44k="
 									},
@@ -147,6 +149,7 @@
 							"top": 96,
 							"width": 729,
 							"height": 745,
+							"showProperty": false,
 							"nameCompartment": {
 								"$ref": "AAAAAAF4Y7vOsq8Tm+w="
 							}
@@ -9529,6 +9532,7 @@
 							"width": 141.88525390625,
 							"height": 178,
 							"showNamespace": true,
+							"showProperty": false,
 							"nameCompartment": {
 								"$ref": "AAAAAAF4wGa2LlGNsmc="
 							},
@@ -15311,7 +15315,8 @@
 								"$ref": "AAAAAAF4Y7vOsq8QSl0="
 							}
 						}
-					]
+					],
+					"stereotype": "root"
 				},
 				{
 					"_type": "UMLPackage",
