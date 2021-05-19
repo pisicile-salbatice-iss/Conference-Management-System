@@ -41,6 +41,11 @@ class AdminView(private val service: Service) : View() {
         logoutButton.apply { action { handleLogout() }}
     }
 
+    private fun atLeastNCharacters(field: String): Boolean {
+        val n = 3
+        return field.length >= n
+    }
+
     private fun handleLogout() {
         replaceWith(LoginView::class, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
     }
@@ -161,6 +166,26 @@ class AdminView(private val service: Service) : View() {
         }
         if (nameField.text.isBlank()) {
             alert(Alert.AlertType.ERROR, "The conference must have a name")
+            return
+        }
+        if (!atLeastNCharacters(nameField.text)) {
+            alert(Alert.AlertType.ERROR, "The conference must have at least 3 characters")
+            return
+        }
+        if (Date.valueOf(dateField.value) < java.util.Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            return
+        }
+        if (Date.valueOf(submitPaperDeadline.value) < java.util.Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            return
+        }
+        if (Date.valueOf(reviewPaperDeadline.value) < java.util.Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            return
+        }
+        if (Date.valueOf(biddingPhaseDeadline.value) < java.util.Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
             return
         }
         try {

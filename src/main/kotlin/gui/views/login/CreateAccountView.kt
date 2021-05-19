@@ -45,6 +45,11 @@ class CreateAccountView(private val service: Service) : View("Create account") {
         return "^[A-Za-z](.*)([@])(.+)(\\.)(.+)".toRegex().matches(email)
     }
 
+    private fun atLeastNCharacters(field: String): Boolean {
+        val n = 3
+        return field.length >= n
+    }
+
     private fun handleCreateAccount() {
         if (!areFieldsFilled()) {
             alert(Alert.AlertType.ERROR, "All fields are mandatory")
@@ -56,6 +61,14 @@ class CreateAccountView(private val service: Service) : View("Create account") {
         }
         if (!isEmailValid(emailField.text)) {
             alert(Alert.AlertType.ERROR, "Invalid email")
+            return
+        }
+        if (!atLeastNCharacters(usernameField.text)) {
+            alert(Alert.AlertType.ERROR, "The username should have at least three characters")
+            return
+        }
+        if (!atLeastNCharacters(fullNameField.text)) {
+            alert(Alert.AlertType.ERROR, "The username should have at least three characters")
             return
         }
         try {

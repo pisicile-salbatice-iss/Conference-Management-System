@@ -10,7 +10,10 @@ import javafx.scene.control.Label
 import javafx.scene.layout.GridPane
 import javafx.stage.FileChooser
 import service.Service
-import tornadofx.*
+import tornadofx.View
+import tornadofx.ViewTransition
+import tornadofx.action
+import tornadofx.seconds
 import java.io.File
 import java.io.IOException
 
@@ -31,7 +34,7 @@ class SpeakerSessionView(
     init {
         print(paper.paperText)
         paperTextLabel.text = paper.paperText
-        timeToPresentLabel.text =service.getDateOfPresentation(paper, session).toString()
+        timeToPresentLabel.text = service.getDateOfPresentation(paper, session).toString()
         addPresentationButton.apply {
             action {
                 uploadPresentation()

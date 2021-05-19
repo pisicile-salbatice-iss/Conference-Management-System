@@ -418,7 +418,7 @@ class Service {
     }
 
     fun getSessionsOfAConference(conferenceId: Int): List<Session> {
-        return sessionRepository.findSessionsByConferecenceId(conferenceId)
+        return sessionRepository.findSessionsByConferenceId(conferenceId)
     }
 
     fun getPcMemberProposalsOfConferenceNotRefused(conferenceId: Int) =
