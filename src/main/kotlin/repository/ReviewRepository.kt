@@ -47,4 +47,15 @@ class ReviewRepository(private val url: String, private val db_user: String, pri
             preparedStatement.executeUpdate()
         }
     }
+
+    fun updatePair(review: Review) {
+        val sqlCommand = "UPDATE Reviews SET result = ? WHERE pcMemberId = ? AND proposalId = ?"
+        DriverManager.getConnection(url, db_user, db_password).use { connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setString(1, review.reviewResult.name)
+            preparedStatement.setInt(2, review.pcMemberId)
+            preparedStatement.setInt(3, review.proposalId)
+            preparedStatement.executeUpdate()
+        }
+    }
 }

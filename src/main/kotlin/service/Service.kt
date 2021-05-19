@@ -2,7 +2,9 @@ package service
 
 import domain.*
 import exceptions.ConferenceException
+import javafx.scene.control.Alert
 import repository.*
+import tornadofx.alert
 import java.io.FileInputStream
 import java.io.IOException
 import java.lang.Integer.max
@@ -225,8 +227,33 @@ class Service {
         pcMemberProposalRepository.addPair(PCMemberProposal(pcMemberId, proposalId, availability, false))
     }
 
-    fun addReview(pcMemberId: Int, proposalId: Int, reviewResult: ReviewResult) {
-        reviewRepository.addPair(Review(pcMemberId, proposalId, reviewResult))
+    fun review(pcMemberId: Int, proposalId: Int, reviewResult: ReviewResult): Pair<Int, Int> {
+        if (reviewRepository.getAll().any {
+                it.pcMemberId == pcMemberId && it.proposalId == proposalId
+            })
+            reviewRepository.updatePair(Review(pcMemberId, proposalId, reviewResult))
+        else
+            reviewRepository.addPair(Review(pcMemberId, proposalId, reviewResult))
+        var total = 0
+        var needed = 0
+        for (proposal in pcMemberProposalRepository.getAll())
+            if (proposal.proposalId == proposalId && proposal.availability != Availability.REFUSE)
+                ++total
+        for (review in reviewRepository.getAll())
+            if (review.proposalId == proposalId && review.reviewResult in listOf(
+                    ReviewResult.STRONGLY_ACCEPT,
+                    ReviewResult.ACCEPT,
+                    ReviewResult.WEAK_ACCEPT,
+                    ReviewResult.BORDERLINE
+                )
+            )
+                ++needed
+        if (needed == total) {
+            val proposal = proposalRepository.getProposalWithGivenId(proposalId)
+            proposal.accepted = true
+            proposalRepository.updateProposal(proposal)
+        }
+        return Pair(needed, total)
     }
 
 

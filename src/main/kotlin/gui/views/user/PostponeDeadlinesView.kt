@@ -14,6 +14,7 @@ import tornadofx.action
 import tornadofx.seconds
 import tornadofx.*
 import java.sql.Date
+import java.util.*
 
 class PostponeDeadlinesView(private val user: User,
                             private val service: Service,
@@ -64,6 +65,10 @@ class PostponeDeadlinesView(private val user: User,
             alert(Alert.AlertType.ERROR, "Pick a date!")
             return
         }
+        if (Date.valueOf(submitProposalDatePicker.value) < Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            return
+        }
         conference.submitPaperDeadline = Date.valueOf(submitProposalDatePicker.value)
         service.updateConferenceDeadlines(conference)
         setLabels()
@@ -74,6 +79,10 @@ class PostponeDeadlinesView(private val user: User,
             alert(Alert.AlertType.ERROR, "Pick a date!")
             return
         }
+        if (Date.valueOf(reviewPaperDatePicker.value) < Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            return
+        }
         conference.reviewPaperDeadline = Date.valueOf(reviewPaperDatePicker.value)
         service.updateConferenceDeadlines(conference)
         setLabels()
@@ -82,6 +91,10 @@ class PostponeDeadlinesView(private val user: User,
     private fun postponeBiddingPhaseHandle(){
         if(biddingPhaseDatePicker.value == null){
             alert(Alert.AlertType.ERROR, "Pick a date!")
+            return
+        }
+        if (Date.valueOf(biddingPhaseDatePicker.value) < Date()) {
+            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
             return
         }
         conference.biddingPhaseDeadline = Date.valueOf(biddingPhaseDatePicker.value)
