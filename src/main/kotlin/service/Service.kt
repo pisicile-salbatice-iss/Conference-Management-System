@@ -93,7 +93,8 @@ class Service {
         attendancePrice: Int,
         submitPaperDeadline: Date,
         reviewPaperDeadline: Date,
-        biddingPhaseDeadline: Date
+        biddingPhaseDeadline: Date,
+        withFullPaper: Boolean
     ) {
         var id = 0
         for (conference in conferenceRepository.getConferences()) id = max(id, conference.id + 1)
@@ -105,7 +106,8 @@ class Service {
                 attendancePrice,
                 submitPaperDeadline,
                 reviewPaperDeadline,
-                biddingPhaseDeadline
+                biddingPhaseDeadline,
+                withFullPaper
             )
         )
     }
@@ -182,7 +184,8 @@ class Service {
         authors: String,
         keywords: String,
         finalized: Boolean = false,
-        accepted: Boolean = false
+        accepted: Boolean = false,
+        fullPaperLocation: String = ""
     ) =
         proposalRepository.addProposal(Proposal((proposalRepository.getProposals().map { proposal -> proposal.id }
             .maxOrNull() ?: 0) + 1,
@@ -193,7 +196,9 @@ class Service {
             authors,
             keywords,
             finalized,
-            accepted))
+            accepted,
+            fullPaperLocation
+        ))
 
     fun updateProposal(
         id: Int, userConferenceId: Int,
@@ -203,7 +208,8 @@ class Service {
         authors: String,
         keywords: String,
         finalized: Boolean = false,
-        accepted: Boolean = false
+        accepted: Boolean = false,
+        fullPaperLocation: String = ""
     ) {
         proposalRepository.updateProposal(
             Proposal(
@@ -215,7 +221,8 @@ class Service {
                 authors,
                 keywords,
                 finalized,
-                accepted
+                accepted,
+                fullPaperLocation
             )
         )
     }

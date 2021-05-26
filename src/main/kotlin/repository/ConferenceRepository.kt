@@ -14,7 +14,8 @@ class ConferenceRepository (private val url: String, private val db_user: String
                     attendancePrice INT,
                     submitProposalDeadline DATE,
                     reviewPaperDeadline DATE,
-                    biddingPhaseDeadline DATE
+                    biddingPhaseDeadline DATE,
+                    withFullPaper BOOLEAN
                 )"""
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCreateTableQuery)
@@ -30,7 +31,7 @@ class ConferenceRepository (private val url: String, private val db_user: String
             val preparedStatement = connection.prepareStatement(sqlCommand)
             val rs = preparedStatement.executeQuery()
             while (rs.next()) {
-                val conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"),  rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"), rs.getDate("biddingPhaseDeadline"))
+                val conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"),  rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"), rs.getDate("biddingPhaseDeadline"), rs.getBoolean("withFullPaper"))
                 conferences.add(conference)
             }
         }
@@ -45,14 +46,14 @@ class ConferenceRepository (private val url: String, private val db_user: String
             preparedStatement.setInt(1, proposal.id)
             val rs = preparedStatement.executeQuery()
             if (rs.next()) {
-                conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"),  rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"), rs.getDate("biddingPhaseDeadline"))
+                conference = Conference(rs.getInt("id"), rs.getString("name"), rs.getDate("date"), rs.getInt("attendancePrice"),  rs.getDate("submitProposalDeadline"), rs.getDate("reviewPaperDeadline"), rs.getDate("biddingPhaseDeadline"), rs.getBoolean("withFullPaper"))
             }
         }
         return conference
     }
 
     fun addConference(entity: Conference) {
-        val sqlCommand = "INSERT INTO conferences (id, name, date, attendancePrice, submitProposalDeadline, reviewPaperDeadline, biddingPhaseDeadline) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        val sqlCommand = "INSERT INTO conferences (id, name, date, attendancePrice, submitProposalDeadline, reviewPaperDeadline, biddingPhaseDeadline, withFullPaper) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, entity.id)
@@ -62,6 +63,7 @@ class ConferenceRepository (private val url: String, private val db_user: String
             preparedStatement.setDate(5, entity.submitPaperDeadline)
             preparedStatement.setDate(6, entity.reviewPaperDeadline)
             preparedStatement.setDate(7, entity.biddingPhaseDeadline)
+            preparedStatement.setBoolean(8, entity.withFullPaper)
             preparedStatement.executeUpdate()
         }
     }

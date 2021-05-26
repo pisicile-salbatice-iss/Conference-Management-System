@@ -72,6 +72,6 @@ class SpeakerSessionView(
             exception.printStackTrace()
             return
         }
-        Alert(Alert.AlertType.CONFIRMATION, "File was uploaded")
+        Alert(Alert.AlertType.INFORMATION, "File was uploaded")
     }
 }
