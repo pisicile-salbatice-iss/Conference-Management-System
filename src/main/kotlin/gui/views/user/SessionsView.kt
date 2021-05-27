@@ -2,6 +2,7 @@ package gui.views.user
 
 import domain.*
 import exceptions.ConferenceException
+import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
@@ -26,10 +27,11 @@ class SessionsView(
     private val Sessions: ListView<Session> by fxid()
     private val PapersOfSession: ListView<ProposalSession> by fxid()
     private val topic: TextField by fxid()
-    private val time: TextField by fxid()
+    private val participantsLimit: TextField by fxid()
     private val goBack: Button by fxid()
     private val addSession: Button by fxid()
     private val addToSession: Button by fxid()
+    private val assignRoomsButton: Button by fxid()
     private val map = hashMapOf<Int, Any?>()
 
     init {
@@ -48,6 +50,11 @@ class SessionsView(
                 addToSessionHandler()
             }
         }
+        assignRoomsButton.apply {
+            action {
+                assignRoomsHandle()
+            }
+        }
         Sessions.onLeftClick {
             val session = Sessions.selectionModel.selectedItem ?: return@onLeftClick
             PapersOfSession.items.clear()
@@ -55,6 +62,13 @@ class SessionsView(
         }
         loadSessions()
         loadPapers()
+    }
+
+    private fun assignRoomsHandle() {
+        replaceWith(
+            AssignRoomsView(user, service, this, conference),
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.UP)
+        )
     }
 
     private fun goBackHandle() {
@@ -77,7 +91,8 @@ class SessionsView(
 
     private fun addSession() {
         val t = topic.text
-        service.addSession(conference.id, t)
+        val limit = participantsLimit.text.toInt()
+        service.addSession(conference.id, t, limit)
         loadSessions()
     }
 
@@ -85,7 +100,7 @@ class SessionsView(
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH)
         lateinit var date: LocalDate
         try {
-            date = LocalDate.parse(time.text, formatter)
+            date = LocalDate.parse(participantsLimit.text, formatter)
         } catch (e: Exception) {
             alert(Alert.AlertType.ERROR, "Invalid date")
             return

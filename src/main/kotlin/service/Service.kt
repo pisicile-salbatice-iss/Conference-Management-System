@@ -21,6 +21,7 @@ class Service {
     private val sessionRepository: SessionRepository
     private val proposalSessionRepository: ProposalSessionRepository
     private val userSectionRepository: UserSectionRepository
+    private val roomsRepository: RoomRepository
 
     init {
         val configs = readSettingsFile()
@@ -38,6 +39,7 @@ class Service {
         proposalSessionRepository =
             ProposalSessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         userSectionRepository = UserSectionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        roomsRepository = RoomRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -367,10 +369,10 @@ class Service {
             }.email
     }
 
-    fun addSession(conferenceId: Int, topic: String) {
+    fun addSession(conferenceId: Int, topic: String, participantsLimit: Int) {
         var id = 0
         for (session in sessionRepository.getSessions()) id = max(id, session.sessionId + 1)
-        sessionRepository.addSession(Session(id, conferenceId, topic))
+        sessionRepository.addSession(Session(id, conferenceId, topic, participantsLimit))
     }
 
     fun getPaperOfSpeakerAtSession(speaker: User, conference: Conference, session: Session): Proposal {
@@ -407,5 +409,27 @@ class Service {
             throw ConferenceException("Paper already attributed to a session")
         }
         proposalSessionRepository.addProposalSession(proposalSession)
+    }
+
+
+    fun getRooms(): List<Room> {
+        return roomsRepository.getRooms();
+    }
+
+    fun assignRoomToSession(session: Session, roomId: Int){
+        if(session.roomId != -1){
+            throw ConferenceException("Room is already set for session")
+        }
+
+
+        val sessionsForConference = sessionRepository.findSessionsByConferecenceId(session.conferenceId);
+
+        if(sessionsForConference.any{
+            it.roomId == roomId
+            }){
+            throw ConferenceException("Room already assigned to another session of this conference")
+        }
+
+        sessionRepository.assignRoomToSession(session.sessionId, roomId)
     }
 }
