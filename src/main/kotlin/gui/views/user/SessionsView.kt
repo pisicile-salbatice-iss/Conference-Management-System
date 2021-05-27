@@ -2,6 +2,7 @@ package gui.views.user
 
 import domain.*
 import exceptions.ConferenceException
+import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
@@ -16,7 +17,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class SessionsView(
-    user: User,
+    private val user: User,
     private val service: Service,
     private val parent: View,
     private val conference: Conference
@@ -26,10 +27,11 @@ class SessionsView(
     private val sessions: ListView<Session> by fxid()
     private val papersOfSession: ListView<ProposalSession> by fxid()
     private val topic: TextField by fxid()
-    private val time: TextField by fxid()
+    private val participantsLimit: TextField by fxid()
     private val goBack: Button by fxid()
     private val addSession: Button by fxid()
     private val addToSession: Button by fxid()
+    private val assignRoomsButton: Button by fxid()
 
     init {
         goBack.apply {
@@ -47,6 +49,11 @@ class SessionsView(
                 addToSessionHandler()
             }
         }
+        assignRoomsButton.apply {
+            action {
+                assignRoomsHandle()
+            }
+        }
         sessions.onLeftClick {
             val session = sessions.selectionModel.selectedItem ?: return@onLeftClick
             papersOfSession.items.clear()
@@ -54,6 +61,13 @@ class SessionsView(
         }
         loadSessions()
         loadPapers()
+    }
+
+    private fun assignRoomsHandle() {
+        replaceWith(
+            AssignRoomsView(user, service, this, conference),
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.UP)
+        )
     }
 
     private fun goBackHandle() {
@@ -76,7 +90,8 @@ class SessionsView(
 
     private fun addSession() {
         val t = topic.text
-        service.addSession(conference.id, t)
+        val limit = participantsLimit.text.toInt()
+        service.addSession(conference.id, t, limit)
         loadSessions()
     }
 
@@ -84,7 +99,7 @@ class SessionsView(
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH)
         lateinit var date: LocalDate
         try {
-            date = LocalDate.parse(time.text, formatter)
+            date = LocalDate.parse(participantsLimit.text, formatter)
         } catch (e: Exception) {
             alert(Alert.AlertType.ERROR, "Invalid date")
             return
