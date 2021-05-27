@@ -16,7 +16,8 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     authors varchar(100),
                     keywords varchar(50),
                     finalized BOOLEAN,
-                    accepted BOOLEAN
+                    accepted BOOLEAN,
+                    fullPaperLocation VARCHAR(200)
                 )"""
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCreateTableQuery)
@@ -26,7 +27,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
 
     fun addProposal(proposal: Proposal) {
         val sqlCommand =
-            "INSERT INTO Proposals (id, ucid, abstractText, paperText, title, authors, keywords, finalized, accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO Proposals (id, ucid, abstractText, paperText, title, authors, keywords, finalized, accepted, fullPaperLocation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
             val preparedStatement = connection.prepareStatement(sqlCommand)
             preparedStatement.setInt(1, proposal.id)
@@ -38,6 +39,7 @@ class ProposalRepository(private val url: String, private val db_user: String, p
             preparedStatement.setString(7, proposal.keywords)
             preparedStatement.setBoolean(8, proposal.finalized)
             preparedStatement.setBoolean(9, proposal.accepted)
+            preparedStatement.setString(10, proposal.fullPaperLocation)
             preparedStatement.executeUpdate()
         }
     }
@@ -76,7 +78,8 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     rs.getString("authors"),
                     rs.getString("keywords"),
                     rs.getBoolean("finalized"),
-                    rs.getBoolean("accepted")
+                    rs.getBoolean("accepted"),
+                    rs.getString("fullPaperLocation")
                 )
                 proposals.add(proposal)
             }
@@ -104,7 +107,8 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     rs.getString("authors"),
                     rs.getString("keywords"),
                     rs.getBoolean("finalized"),
-                    rs.getBoolean("accepted")
+                    rs.getBoolean("accepted"),
+                    rs.getString("fullPaperLocation")
                 )
                 proposals.add(proposal)
             }
@@ -130,7 +134,8 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     rs.getString("authors"),
                     rs.getString("keywords"),
                     rs.getBoolean("finalized"),
-                    rs.getBoolean("accepted")
+                    rs.getBoolean("accepted"),
+                    rs.getString("fullPaperLocation")
                 )
                 proposals.add(proposal)
             }
@@ -154,7 +159,8 @@ class ProposalRepository(private val url: String, private val db_user: String, p
                     resultSet.getString("authors"),
                     resultSet.getString("keywords"),
                     resultSet.getBoolean("finalized"),
-                    resultSet.getBoolean("accepted")
+                    resultSet.getBoolean("accepted"),
+                    resultSet.getString("fullPaperLocation")
                 )
             }
             throw ConferenceException("Proposal with given id does not exist")

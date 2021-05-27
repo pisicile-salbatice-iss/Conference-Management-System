@@ -9,7 +9,8 @@ data class Proposal(
     var authors: String,
     var keywords: String,
     var finalized: Boolean,
-    var accepted: Boolean
+    var accepted: Boolean,
+    var fullPaperLocation: String
 ) {
     override fun toString(): String {
         return title

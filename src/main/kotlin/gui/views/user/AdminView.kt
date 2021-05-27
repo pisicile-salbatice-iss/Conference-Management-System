@@ -32,13 +32,14 @@ class AdminView(private val service: Service) : View() {
     private val submitPaperDeadline: DatePicker by fxid()
     private val reviewPaperDeadline: DatePicker by fxid()
     private val biddingPhaseDeadline: DatePicker by fxid()
+    private val fullPaperRadioButton: RadioButton by fxid()
 
     init {
         conferenceListView.items.addAll(service.getConferences().asObservable())
         addConferenceButton.apply { action { handleCreateConference() } }
         inviteChairButton.apply { action { handleInviteChair() } }
         inviteReviewerButton.apply { action { handleInviteReviewerButton() } }
-        logoutButton.apply { action { handleLogout() }}
+        logoutButton.apply { action { handleLogout() } }
     }
 
     private fun atLeastNCharacters(field: String): Boolean {
@@ -173,23 +174,31 @@ class AdminView(private val service: Service) : View() {
             return
         }
         if (Date.valueOf(dateField.value) < java.util.Date()) {
-            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            alert(Alert.AlertType.ERROR, "Cannot choose date in the past!")
             return
         }
         if (Date.valueOf(submitPaperDeadline.value) < java.util.Date()) {
-            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            alert(Alert.AlertType.ERROR, "Cannot choose date in the past!")
             return
         }
         if (Date.valueOf(reviewPaperDeadline.value) < java.util.Date()) {
-            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            alert(Alert.AlertType.ERROR, "Cannot choose date in the past!")
             return
         }
         if (Date.valueOf(biddingPhaseDeadline.value) < java.util.Date()) {
-            alert(Alert.AlertType.ERROR,"Cannot choose date in the past!")
+            alert(Alert.AlertType.ERROR, "Cannot choose date in the past!")
             return
         }
         try {
-            service.addConference(nameField.text, Date.valueOf(dateField.value), priceField.text.toInt(), Date.valueOf(submitPaperDeadline.value), Date.valueOf(reviewPaperDeadline.value), Date.valueOf(biddingPhaseDeadline.value))
+            service.addConference(
+                nameField.text,
+                Date.valueOf(dateField.value),
+                priceField.text.toInt(),
+                Date.valueOf(submitPaperDeadline.value),
+                Date.valueOf(reviewPaperDeadline.value),
+                Date.valueOf(biddingPhaseDeadline.value),
+                !fullPaperRadioButton.isDisabled
+            )
             alert(Alert.AlertType.INFORMATION, "Conference added successfully")
 
         } catch (exception: ConferenceException) {
