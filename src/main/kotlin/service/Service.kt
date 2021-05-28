@@ -430,6 +430,14 @@ class Service {
         return sessionRepository.findSessionsByConferenceId(conferenceId)
     }
 
+    fun getSessionsOfAConferenceWithNoRoomsAssigned(conferenceId: Int): List<Session> {
+        return sessionRepository.findSessionsByConferenceIdWithNoRoomsAssigned(conferenceId)
+    }
+
+    fun getNumberOfUsersForSession(sid: Int): Int{
+        return userSectionRepository.getUsersOfSession(sid).size
+    }
+
     fun getPcMemberProposalsOfConferenceNotRefused(conferenceId: Int) =
         pcMemberProposalRepository.getPcMemberProposalsOfConferenceNotRefused(conferenceId)
 
@@ -445,7 +453,11 @@ class Service {
     }
 
     fun getRooms(): List<Room> {
-        return roomsRepository.getRooms();
+        return roomsRepository.getAvailableRooms();
+    }
+
+    fun getRoomOfSession(sid: Int): Room?{
+        return sessionRepository.getRoomOfSession(sid);
     }
 
     fun assignRoomToSession(session: Session, roomId: Int){

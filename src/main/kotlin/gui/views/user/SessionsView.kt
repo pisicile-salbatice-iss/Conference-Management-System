@@ -4,10 +4,7 @@ import domain.*
 import exceptions.ConferenceException
 import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
-import javafx.scene.control.Alert
-import javafx.scene.control.Button
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.layout.GridPane
 import service.Service
 import tornadofx.*
@@ -32,6 +29,7 @@ class SessionsView(
     private val addSession: Button by fxid()
     private val addToSession: Button by fxid()
     private val assignRoomsButton: Button by fxid()
+    private val sessionInfoLabel: Label by fxid()
 
     init {
         goBack.apply {
@@ -55,9 +53,16 @@ class SessionsView(
             }
         }
         sessions.onLeftClick {
+            sessionInfoLabel.text = ""
             val session = sessions.selectionModel.selectedItem ?: return@onLeftClick
             papersOfSession.items.clear()
             papersOfSession.items.addAll(service.getProposalSessionsOfSession(session.sessionId).asObservable())
+
+            val room: Room = service.getRoomOfSession(session.sessionId) ?: return@onLeftClick
+
+            val sessionInfo = "Session with topic ${session.topic} will be held in the ${room.name} room"
+            sessionInfoLabel.text = sessionInfo
+
         }
         loadSessions()
         loadPapers()
@@ -83,12 +88,14 @@ class SessionsView(
     }
 
     private fun loadSessions() {
+        sessionInfoLabel.text= ""
         val observable = FXCollections.observableArrayList(service.getSessionsOfAConference(conference.id))
         sessions.items.clear()
         sessions.items.addAll(observable)
     }
 
     private fun addSession() {
+        sessionInfoLabel.text= ""
         val t = topic.text
         val limit = participantsLimit.text.toInt()
         service.addSession(conference.id, t, limit)

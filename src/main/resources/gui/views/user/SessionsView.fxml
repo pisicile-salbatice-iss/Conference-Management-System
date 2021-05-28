@@ -39,5 +39,6 @@
         <TextField fx:id="topic"/>
         <Label text="Participants limit"/>
         <TextField fx:id="participantsLimit"/>
+        <Label fx:id="sessionInfoLabel" wrapText="true"/>
     </VBox>
 </GridPane>
