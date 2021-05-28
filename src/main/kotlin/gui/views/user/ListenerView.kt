@@ -81,6 +81,12 @@ class ListenerView(private val user: User,
             return
         }
         try {
+            val numberOfListeners = service.getNumberOfUsersForSession(selectedSection!!.sessionId)
+            if(numberOfListeners == selectedSection!!.participantsLimit){
+                alert(Alert.AlertType.INFORMATION, "Section full", "Sorry! You cannot attend this session as the maximum number of participants was reached")
+                return
+            }
+
             service.addUserToSection(user.id, selectedSection!!.sessionId)
             loadUserSections()
             alert(Alert.AlertType.INFORMATION, "Section was chosen")
