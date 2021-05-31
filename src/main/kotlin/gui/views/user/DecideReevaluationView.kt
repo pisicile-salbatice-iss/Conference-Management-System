@@ -16,7 +16,7 @@ import java.lang.Exception
 class DecideReevaluationView(
     private val user:User,
     private val service : Service,
-    private val parent: View,
+    private val parent: ChairView,
     private val conference:Conference
 ) : View(user.name + " - " + conference.name){
     override val root: GridPane by fxml()
@@ -24,10 +24,17 @@ class DecideReevaluationView(
     private val acceptProposalButton: Button by fxid()
     private val conflictingProposals: ListView<Proposal> by fxid()
     private val requestCloserEvaluationButton: Button by fxid()
+    private val dropReviewersButton: Button by fxid()
 
     private val reviewersOfProposal: ListView<User> by fxid()
 
     init {
+        dropReviewersButton.apply{
+            action {
+                dropReviewersHandle()
+            }
+        }
+
         requestCloserEvaluationButton.apply {
             action {
                 requestCloserEvaluationHandle()
@@ -53,6 +60,7 @@ class DecideReevaluationView(
     }
 
     private fun goBackHandle(){
+        parent.loadPCMembers()
         replaceWith(
             parent,
             ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT)
@@ -92,6 +100,17 @@ class DecideReevaluationView(
         }catch (exc: Exception){
             alert(Alert.AlertType.ERROR, exc.toString())
         }
+    }
 
+    private fun dropReviewersHandle(){
+        val proposal = conflictingProposals.selectionModel.selectedItem
+        try{
+            val reviewers = reviewersOfProposal.items
+            service.dropReviewers(proposal, reviewers)
+            loadData()
+            reviewersOfProposal.items.setAll()
+        }catch (exc: Exception){
+            alert(Alert.AlertType.ERROR, exc.toString())
+        }
     }
 }

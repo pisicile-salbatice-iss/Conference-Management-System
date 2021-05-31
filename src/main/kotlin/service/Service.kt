@@ -538,4 +538,11 @@ class Service {
     fun postMessage(text: String, proposalId: Int, userId: Int){
         chatRepository.postMessage(text, proposalId, userId)
     }
+
+    fun dropReviewers(proposal: Proposal, reviewers: List<User>) {
+        reviewers.forEach{
+            reviewRepository.dropReview(it.id, proposal.id)
+            pcMemberProposalRepository.refusePaperForUser(it.id, proposal.id)
+        }
+    }
 }

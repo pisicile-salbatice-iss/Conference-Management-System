@@ -158,7 +158,7 @@ class ChairView(
         }
     }
 
-    private fun loadPCMembers() {
+    fun loadPCMembers() {
         listOfPCMembers.items.clear()
         val users = service.getPcMemberProposalsOfConferenceNotRefused(conference.id)
         listOfPCMembers.items.addAll(users)

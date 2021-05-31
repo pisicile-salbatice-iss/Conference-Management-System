@@ -89,4 +89,18 @@ class PcMemberProposalRepository (private val url: String, private val db_user: 
         }
         return pairs
     }
+
+    fun refusePaperForUser(pcMemberId: Int, proposalId: Int){
+        val sqlCommand = """
+           UPDATE pcmemberproposal
+            SET availability='REFUSE'
+            WHERE pcmemberid=? AND proposalid=?
+        """
+        DriverManager.getConnection(url, db_user, db_password).use { connection ->
+            val preparedStatement = connection.prepareStatement(sqlCommand)
+            preparedStatement.setInt(1, pcMemberId)
+            preparedStatement.setInt(2, proposalId)
+            preparedStatement.executeUpdate()
+        }
+    }
 }
