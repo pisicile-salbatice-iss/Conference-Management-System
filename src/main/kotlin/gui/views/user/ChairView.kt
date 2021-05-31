@@ -29,7 +29,15 @@ class ChairView(
     private val modifySpeakers: Button by fxid()
     private val listOfPCMembers: ListView<PCMemberProposal> by fxid()
 
+    private val decideReevaluationButton: Button by fxid()
+
     init {
+        decideReevaluationButton.apply {
+            action {
+                decideReevaluationHandle()
+            }
+        }
+
         goBackButton.apply {
             action {
                 goBackHandle()
@@ -72,6 +80,17 @@ class ChairView(
         }
 
         loadPCMembers()
+    }
+
+    private fun decideReevaluationHandle(){
+        if (Calendar.getInstance().time.after(conference.reviewPaperDeadline)){
+            alert(Alert.AlertType.INFORMATION, "Review deadline has passed")
+            return
+        }
+        replaceWith(
+            DecideReevaluationView(user, service, this, conference),
+            ViewTransition.Explode(0.3.seconds)
+        )
     }
 
     private fun handleModifySpeakers() {

@@ -8,6 +8,7 @@ import java.io.IOException
 import java.lang.Integer.max
 import java.sql.Date
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.streams.toList
 
 class Service {
@@ -243,7 +244,7 @@ class Service {
         var total = 0
         var needed = 0
         for (proposal in pcMemberProposalRepository.getAll())
-            if (proposal.proposalId == proposalId && proposal.availability != Availability.REFUSE)
+            if (proposal.proposalId == proposalId && proposal.availability != Availability.REFUSE  && proposal.assigned)
                 ++total
         for (review in reviewRepository.getAll())
             if (review.proposalId == proposalId && review.reviewResult in listOf(
@@ -475,5 +476,45 @@ class Service {
         }
 
         sessionRepository.assignRoomToSession(session.sessionId, roomId)
+    }
+
+    fun getConflictingProposals(conferenceId: Int): List<Proposal>{
+        var proposals = LinkedList<Proposal>()
+        for (proposal in proposalRepository.getProposalsForConference(conferenceId)){
+            if (proposal.accepted)
+                continue
+
+            var total = 0
+            var reviews = 0
+            var positiveReviews = 0
+
+            for (pcMemberProposal in pcMemberProposalRepository.getAll())
+                if (pcMemberProposal.proposalId == proposal.id && pcMemberProposal.assigned)
+                    ++total
+
+            for (review in reviewRepository.getAll())
+                if (review.proposalId == proposal.id){
+                    ++reviews
+                    if (review.reviewResult in listOf(
+                            ReviewResult.STRONGLY_ACCEPT,
+                            ReviewResult.ACCEPT,
+                            ReviewResult.WEAK_ACCEPT,
+                            ReviewResult.BORDERLINE))
+                        ++positiveReviews
+                }
+
+
+            if (reviews == total && positiveReviews > 0)
+                proposals.add(proposal)
+        }
+        return proposals
+    }
+
+    fun getReviewersOfProposal(proposalId: Int): List<User> {
+        return proposalRepository.getReviewersOfProposal(proposalId)
+    }
+
+    fun acceptProposal(proposalId: Int){
+        proposalRepository.acceptProposal(proposalId)
     }
 }
