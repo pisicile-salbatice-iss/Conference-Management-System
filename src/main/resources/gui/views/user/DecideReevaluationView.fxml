@@ -30,6 +30,7 @@
         </rowConstraints>
          <children>
             <Button fx:id="acceptProposalButton" mnemonicParsing="false" text="Accept proposal" GridPane.halignment="CENTER" />
+            <Button fx:id="requestCloserEvaluationButton" mnemonicParsing="false" text="Request closer evaluation" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

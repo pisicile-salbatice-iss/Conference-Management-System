@@ -11,6 +11,7 @@ import javafx.scene.control.ListView
 import javafx.scene.layout.GridPane
 import service.Service;
 import tornadofx.*
+import java.lang.Exception
 
 class DecideReevaluationView(
     private val user:User,
@@ -22,10 +23,17 @@ class DecideReevaluationView(
     private val goBackButton: Button by fxid()
     private val acceptProposalButton: Button by fxid()
     private val conflictingProposals: ListView<Proposal> by fxid()
+    private val requestCloserEvaluationButton: Button by fxid()
 
     private val reviewersOfProposal: ListView<User> by fxid()
 
     init {
+        requestCloserEvaluationButton.apply {
+            action {
+                requestCloserEvaluationHandle()
+            }
+        }
+
         goBackButton.apply {
             action {
                 goBackHandle()
@@ -71,5 +79,19 @@ class DecideReevaluationView(
         val observable = FXCollections.observableArrayList(service.getConflictingProposals(conference.id))
         conflictingProposals.items.setAll(observable)
         reviewersOfProposal.items.setAll(FXCollections.observableArrayList())
+    }
+
+    private fun requestCloserEvaluationHandle(){
+        val proposal = conflictingProposals.selectionModel.selectedItem
+        try{
+            val reviewers = reviewersOfProposal.items
+            reviewers.forEach {
+                service.addUserToChatRoom(it.id, proposal.id)
+            }
+            alert(Alert.AlertType.INFORMATION, "Chat room created")
+        }catch (exc: Exception){
+            alert(Alert.AlertType.ERROR, exc.toString())
+        }
+
     }
 }

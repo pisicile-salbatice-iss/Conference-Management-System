@@ -23,6 +23,7 @@ class Service {
     private val proposalSessionRepository: ProposalSessionRepository
     private val userSectionRepository: UserSectionRepository
     private val roomsRepository: RoomRepository
+    private val chatRepository: ChatRepository
 
     init {
         val configs = readSettingsFile()
@@ -41,6 +42,7 @@ class Service {
         proposalSessionRepository =
             ProposalSessionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
         userSectionRepository = UserSectionRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
+        chatRepository = ChatRepository(configs["database"]!!, configs["user"]!!, configs["password"]!!)
     }
 
     private fun readSettingsFile(): HashMap<String, String> {
@@ -516,5 +518,24 @@ class Service {
 
     fun acceptProposal(proposalId: Int){
         proposalRepository.acceptProposal(proposalId)
+    }
+
+    fun addUserToChatRoom(userId: Int, proposalId: Int){
+        chatRepository.addUserToChatRoom(userId, proposalId)
+    }
+
+    fun getChatRoomsOfUser(userId: Int): List<Proposal>{
+        val proposalIds = chatRepository.getChatRoomsOfUser(userId)
+        return proposalRepository.getProposals().filter {
+            proposalIds.contains(it.id)
+        }
+    }
+
+    fun getMessagesOfChatRoom(proposalId: Int): List<Message>{
+        return chatRepository.getMessagesOfChatRoom(proposalId)
+    }
+
+    fun postMessage(text: String, proposalId: Int, userId: Int){
+        chatRepository.postMessage(text, proposalId, userId)
     }
 }
