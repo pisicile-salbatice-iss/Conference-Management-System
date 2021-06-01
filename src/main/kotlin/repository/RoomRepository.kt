@@ -38,9 +38,9 @@ class RoomRepository(private val url: String, private val db_user: String, priva
             SELECT * 
             FROM Rooms 
             WHERE id NOT IN (
-                SELECT "roomId" 
+                SELECT roomid 
                 FROM sessions 
-                WHERE "roomId" IS NOT NULL
+                WHERE roomid IS NOT NULL
             )
         """.trimIndent()
         DriverManager.getConnection(url, db_user, db_password).use { connection ->

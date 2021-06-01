@@ -66,7 +66,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
         val sqlCommand = """
             SELECT * 
             FROM Sessions 
-            WHERE (conferenceId = ?) AND ("roomId" IS NULL)
+            WHERE (conferenceId = ?) AND (roomid IS NULL)
         """.trimIndent()
         val sessions = mutableListOf<Session>()
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
@@ -85,7 +85,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
         var room: Room? = null;
         val sqlCommand = """
             SELECT r.* 
-            FROM Sessions INNER JOIN rooms r on sessions."roomId" = r.id
+            FROM Sessions INNER JOIN rooms r on sessions.roomid = r.id
             WHERE sessions.sessionid = ?
         """.trimIndent()
         DriverManager.getConnection(url, db_user, db_password).use { connection ->
@@ -102,7 +102,7 @@ class SessionRepository(private val url: String, private val db_user: String, pr
     fun assignRoomToSession(sessionId: Int, roomId: Int){
         val sqlCommand = """
             UPDATE Sessions 
-            SET "roomId" = ?  
+            SET roomid = ?  
             WHERE sessionId = ?
         """.trimIndent()
         DriverManager.getConnection(url, db_user, db_password).use { connection ->

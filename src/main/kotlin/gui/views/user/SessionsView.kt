@@ -30,6 +30,7 @@ class SessionsView(
     private val addToSession: Button by fxid()
     private val assignRoomsButton: Button by fxid()
     private val sessionInfoLabel: Label by fxid()
+    private val presentationDateField: TextField by fxid()
 
     init {
         goBack.apply {
@@ -106,7 +107,7 @@ class SessionsView(
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH)
         lateinit var date: LocalDate
         try {
-            date = LocalDate.parse(participantsLimit.text, formatter)
+            date = LocalDate.parse(presentationDateField.text, formatter)
         } catch (e: Exception) {
             alert(Alert.AlertType.ERROR, "Invalid date")
             return
