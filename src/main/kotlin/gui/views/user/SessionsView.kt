@@ -2,11 +2,9 @@ package gui.views.user
 
 import domain.*
 import exceptions.ConferenceException
+import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
-import javafx.scene.control.Alert
-import javafx.scene.control.Button
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.layout.GridPane
 import service.Service
 import tornadofx.*
@@ -16,7 +14,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class SessionsView(
-    user: User,
+    private val user: User,
     private val service: Service,
     private val parent: View,
     private val conference: Conference
@@ -26,10 +24,13 @@ class SessionsView(
     private val sessions: ListView<Session> by fxid()
     private val papersOfSession: ListView<ProposalSession> by fxid()
     private val topic: TextField by fxid()
-    private val time: TextField by fxid()
+    private val participantsLimit: TextField by fxid()
     private val goBack: Button by fxid()
     private val addSession: Button by fxid()
     private val addToSession: Button by fxid()
+    private val assignRoomsButton: Button by fxid()
+    private val sessionInfoLabel: Label by fxid()
+    private val presentationDateField: TextField by fxid()
 
     init {
         goBack.apply {
@@ -47,13 +48,32 @@ class SessionsView(
                 addToSessionHandler()
             }
         }
+        assignRoomsButton.apply {
+            action {
+                assignRoomsHandle()
+            }
+        }
         sessions.onLeftClick {
+            sessionInfoLabel.text = ""
             val session = sessions.selectionModel.selectedItem ?: return@onLeftClick
             papersOfSession.items.clear()
             papersOfSession.items.addAll(service.getProposalSessionsOfSession(session.sessionId).asObservable())
+
+            val room: Room = service.getRoomOfSession(session.sessionId) ?: return@onLeftClick
+
+            val sessionInfo = "Session with topic ${session.topic} will be held in the ${room.name} room"
+            sessionInfoLabel.text = sessionInfo
+
         }
         loadSessions()
         loadPapers()
+    }
+
+    private fun assignRoomsHandle() {
+        replaceWith(
+            AssignRoomsView(user, service, this, conference),
+            ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.UP)
+        )
     }
 
     private fun goBackHandle() {
@@ -69,14 +89,17 @@ class SessionsView(
     }
 
     private fun loadSessions() {
+        sessionInfoLabel.text= ""
         val observable = FXCollections.observableArrayList(service.getSessionsOfAConference(conference.id))
         sessions.items.clear()
         sessions.items.addAll(observable)
     }
 
     private fun addSession() {
+        sessionInfoLabel.text= ""
         val t = topic.text
-        service.addSession(conference.id, t)
+        val limit = participantsLimit.text.toInt()
+        service.addSession(conference.id, t, limit)
         loadSessions()
     }
 
@@ -84,7 +107,7 @@ class SessionsView(
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH)
         lateinit var date: LocalDate
         try {
-            date = LocalDate.parse(time.text, formatter)
+            date = LocalDate.parse(presentationDateField.text, formatter)
         } catch (e: Exception) {
             alert(Alert.AlertType.ERROR, "Invalid date")
             return
