@@ -18,7 +18,7 @@ class ChatView (
     private val user: User,
     private val service : Service,
     private val parent: View,
-    private val conference: Conference
+    conference: Conference
 ) : View(user.name + " - " + conference.name){
     override val root: GridPane by fxml()
     private val goBackButton: Button by fxid()
@@ -59,6 +59,8 @@ class ChatView (
     }
 
     private fun loadMessages(){
+        if (conversationsListView.selectionModel.selectedItem == null)
+            return
         messagesListView.items.setAll(
             FXCollections.observableArrayList(
                 service.getMessagesOfChatRoom(
@@ -81,7 +83,7 @@ class ChatView (
             service.postMessage(text, proposal.id, user.id)
             loadMessages()
         }catch (exc: ConferenceException){
-            alert(Alert.AlertType.ERROR, "ERROR: ${exc.toString()}")
+            alert(Alert.AlertType.ERROR, "ERROR: $exc")
         }
     }
 }

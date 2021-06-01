@@ -1,20 +1,20 @@
 package gui.views.user
 
-import domain.Conference;
+import domain.Conference
 import domain.Proposal
-import domain.User;
+import domain.User
 import exceptions.ConferenceException
 import javafx.collections.FXCollections
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ListView
 import javafx.scene.layout.GridPane
-import service.Service;
+import service.Service
 import tornadofx.*
 import java.lang.Exception
 
 class DecideReevaluationView(
-    private val user:User,
+    user:User,
     private val service : Service,
     private val parent: ChairView,
     private val conference:Conference
@@ -68,8 +68,7 @@ class DecideReevaluationView(
     }
 
     private fun selectProposalHandle(){
-        val proposal = conflictingProposals.selectionModel.selectedItem
-
+        val proposal = conflictingProposals.selectionModel.selectedItem ?: return
         reviewersOfProposal.items.setAll(FXCollections.observableArrayList(service.getReviewersOfProposal(proposal.id)))
     }
 

@@ -2,11 +2,11 @@ package gui.views.user
 
 import domain.*
 import exceptions.ConferenceException
-import gui.views.conference.ChangeSpeakerView
 import gui.views.conference.PayForConferenceView
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ListView
+import javafx.scene.control.TextField
 import javafx.scene.layout.GridPane
 import service.Service
 import tornadofx.*
@@ -26,9 +26,9 @@ class ChairView(
     private val sendResultsButton: Button by fxid()
     private val payButton: Button by fxid()
     private val viewSessions: Button by fxid()
-    private val modifySpeakers: Button by fxid()
     private val listOfPCMembers: ListView<PCMemberProposal> by fxid()
-
+    private val sessionChair: TextField by fxid()
+    private val sessionChairButton: Button by fxid()
     private val decideReevaluationButton: Button by fxid()
 
     init {
@@ -73,13 +73,21 @@ class ChairView(
             }
         }
 
-        modifySpeakers.apply{
+        sessionChairButton.apply {
             action {
-                handleModifySpeakers()
+                sessionChairHandle()
             }
         }
 
         loadPCMembers()
+    }
+
+    private fun sessionChairHandle() {
+        try {
+            service.makeSessionChair(sessionChair.text, conference)
+        } catch (e: Exception) {
+            alert(Alert.AlertType.ERROR, e.message!!)
+        }
     }
 
     private fun decideReevaluationHandle(){
@@ -89,13 +97,6 @@ class ChairView(
         }
         replaceWith(
             DecideReevaluationView(user, service, this, conference),
-            ViewTransition.Explode(0.3.seconds)
-        )
-    }
-
-    private fun handleModifySpeakers() {
-        replaceWith(
-            ChangeSpeakerView(service, this, conference),
             ViewTransition.Explode(0.3.seconds)
         )
     }
