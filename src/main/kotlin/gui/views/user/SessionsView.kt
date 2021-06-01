@@ -2,7 +2,6 @@ package gui.views.user
 
 import domain.*
 import exceptions.ConferenceException
-import gui.views.conference.PayForConferenceView
 import javafx.collections.FXCollections
 import javafx.scene.control.*
 import javafx.scene.layout.GridPane
@@ -31,6 +30,8 @@ class SessionsView(
     private val assignRoomsButton: Button by fxid()
     private val sessionInfoLabel: Label by fxid()
     private val presentationDateField: TextField by fxid()
+    private val sessionChair: TextField by fxid()
+    private val sessionChairButton: Button by fxid()
 
     init {
         goBack.apply {
@@ -65,8 +66,25 @@ class SessionsView(
             sessionInfoLabel.text = sessionInfo
 
         }
+        sessionChairButton.apply {
+            action {
+                sessionChairHandle()
+            }
+        }
         loadSessions()
         loadPapers()
+    }
+
+    private fun sessionChairHandle() {
+        try {
+            if (sessions.selectionModel.selectedItem == null) {
+                alert(Alert.AlertType.ERROR, "Session not selected")
+                return
+            }
+            service.makeSessionChair(sessionChair.text, conference)
+        } catch (e: Exception) {
+            alert(Alert.AlertType.ERROR, e.message!!)
+        }
     }
 
     private fun assignRoomsHandle() {
